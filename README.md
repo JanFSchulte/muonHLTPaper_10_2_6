@@ -45,6 +45,37 @@ Some ntuples are already produced (using 2018 data D) and the location is here i
 /eos/uscms/store/user/bmahakud/muHLTPaper_SingleMu_PromptReco2018D_v2/SingleMuon/muHLTPaper_SingleMu_PromptReco2018D_v2/190511_164115/0000/
 ```
 
+# Getting the L3/L1 efficiency stack plots for paper
+```
+cd src/MuonHLTNtuples/Tools/Macros/IterL3
+```
+
+Now run the macro to produce the efficiency plots 
+```
+root -l -b -q 'readNtuplesPrefilter_IterL3ForStack.C("/eos/uscms/store/user/bmahakud/muHLTPaper_SingleMu_PromptReco2018D_v2/SingleMuon/muHLTPaper_SingleMu_PromptReco2018D_v2/190511_164115/0000/muonNtuple_*.root","PromptRecoD")'
+```
+This will end up produing a file PromptRecoD_IterL3preFilter.root that will contain all the required efficiency histograms.
+
+#Produce the plot
+```
+cd /src/MuonHLTNtuples/Tools/Macros/IterL3/Plots
+```
+Run the following macro to produce the stack plots
+
+```
+root -l PlotStack.C
+```
+It should produce plots  similar to what you see in the following location
+
+```
+http://bmahakud.web.cern.ch/bmahakud/MuonHLT/muonHLTPaperPlots/IterL3/
+```
+
+
+
+
+
+
 
 
 
