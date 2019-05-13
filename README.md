@@ -39,7 +39,10 @@ HLTAnalyzerEndpath \
 If you endup with a  succesful cmsRun crabjobs could be submitted using CrabConfig_DataD_v2.py 
 
 
-
+# Ntuple location 
+Some ntuples are already produced (using 2018 data D) and the location is here in lpceos
+```
+/eos/uscms/store/user/bmahakud/muHLTPaper_SingleMu_PromptReco2018D_v2/SingleMuon/muHLTPaper_SingleMu_PromptReco2018D_v2/190511_164115/0000/```
 
 
 
