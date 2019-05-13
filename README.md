@@ -52,7 +52,7 @@ cd src/MuonHLTNtuples/Tools/Macros/IterL3
 
 Now run the macro to produce the efficiency plots 
 ```
-root -l -b -q 'readNtuplesPrefilter_IterL3ForStack.C("/eos/uscms/store/user/bmahakud/muHLTPaper_SingleMu_PromptReco2018D_v2/SingleMuon/muHLTPaper_SingleMu_PromptReco2018D_v2/190511_164115/0000/muonNtuple_*.root","PromptRecoD")'
+root -l -b -q 'readNtuplesPrefilter_IterL3ForStack.C("root://cmseos.fnal.gov//store/user/bmahakud/muHLTPaper_SingleMu_PromptReco2018D_v2/SingleMuon/muHLTPaper_SingleMu_PromptReco2018D_v2/190511_164115/0000/muonNtuple_*.root","PromptRecoD")'
 ```
 This will end up produing a file PromptRecoD_IterL3preFilter.root that will contain all the required efficiency histograms.
 
@@ -70,6 +70,48 @@ It should produce plots  similar to what you see in the following location
 ```
 http://bmahakud.web.cern.ch/bmahakud/MuonHLT/muonHLTPaperPlots/IterL3/
 ```
+
+# Getting the L1mu efficiency plots for paper
+
+For this plots cd to /src/MuonHLTNtuples/Tools/Macros/L1mu
+Run the following script to produce the root file containing the L1 eff plots
+```
+root -l -b -q 'readNtuplesPostfilter_L1WrtOffline.C("root://cmseos.fnal.gov//store/user/bmahakud/IOcorrWIter3_SingleMu_PromptReco2018A_v1/SingleMuon/IOcorrWIter3_SingleMu_PromptReco2018A_v1/190213_170619/0000/muonNtuple.root","PromptRecoA1")'
+```
+This will produce a root file containing the efficiency histograms. While running the above code the quality of L1 muons and pt cut on the L1 muons could be se from the following function defiend inside the macro
+
+```
+bool matchMuonWithL1(MuonCand mu, std::vector<L1MuonCand> L1cands){
+
+  bool match = false;
+  float minDR = 0.5;
+  float theDR = 100;
+  for ( std::vector<L1MuonCand>::const_iterator it = L1cands.begin(); it != L1cands.end(); ++it ) {
+    theDR = deltaR(it -> eta, it -> phi, mu.eta, mu.phi);
+
+    if(it->pt <22.0)continue;
+    if (theDR < minDR && it->quality >=12){
+      minDR = theDR;
+      match = true;
+    }
+  }
+  return match;
+}
+
+```
+
+One the root file is generated the plots could be made using the plotter code
+```
+cd /src/MuonHLTNtuples/Tools/Macros/L1mu/Plots
+root -l Plot_L1EffwrtOffline.C
+
+```
+This will produe L1mu eff plots using some existing eff. root files similar to what you see here
+
+```
+http://bmahakud.web.cern.ch/bmahakud/MuonHLT/muonHLTPaperPlots/L1Eff/
+```
+
 
 
 
