@@ -39,7 +39,7 @@ float getTrailingPtCut(int);
 
 void printProgBar(int);
 
-double pt_bins[17]  = { 5, 7, 9, 12, 16,  20 ,  24 ,  27 ,   30,   35,   40,   45,   50,  60, 70 ,  90, 150 };
+double pt_bins[20]  = { 5, 7, 9, 12, 16,  20 ,  24 ,  27 ,   30,   35,   40,   45,   50,  60, 70 ,  90, 150, 250,500,1000 };
 double dz_bins[11]  = {-15, -8, -6, -4, -2, 0, 2, 4, 6, 8, 15};
 double eta_bins[16] = {-2.4, -2.1, -1.6, -1.2, -1.04, -0.9, -0.3, -0.2,  0.2, 0.3, 0.9, 1.04, 1.2, 1.6, 2.1, 2.4};
 double iso_bins[12] = { 0  , 0.02, 0.04, 0.06, 0.08,  0.1, 0.12, 0.16, 0.2, 0.3, 0.6, 1   };
@@ -59,7 +59,7 @@ std::string L3filter      = "hltL3fL1sMu22Or25L1f0L2f10QL3Filtered27Q::TEST";
 //                                          *
 std::string thepassfilter  = L3filter;
 //std::string theprobefilter = L1filter; 
-float offlinePtCut         = 28.;
+float offlinePtCut         = 26.;
 //                                          *
 //                                          *
 // ******************************************
@@ -76,29 +76,49 @@ void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store
   TH1F* dimuon_mass             = new TH1F("h_dimuon_mass"          ,"dimuon_mass"      , 1500,  0,  150 );
   TH1F* tagiso                  = new TH1F("h_tagiso"               ,"tagiso"           ,  100,  0,  1   );  
 
-  TH1F* OIeffPt=new TH1F("OIeffPt","OIeffPt",16,  pt_bins);
+  TH1F* OIeffPt=new TH1F("OIeffPt","OIeffPt",19,  pt_bins);
   TH1F* OIeffEta=new TH1F("OIeffEta","OIeffEta",15, eta_bins); 
   TH1F* OIeffPhi=new TH1F("OIeffPhi","OIeffPhi",20, -3.2, 3.2);
-  TH1F* OIeffnVtx=new TH1F("OIeffnVtx","OIeffnVtx",6,10,40);
+  TH1F* OIeffnVtx=new TH1F("OIeffnVtx","OIeffnVtx",50,0,100);
 
-  TH1F* effPtTot=new TH1F("effPtTot","effPtTot",16,  pt_bins);
+  TH1F* effPtTot=new TH1F("effPtTot","effPtTot",19,  pt_bins);
   TH1F* effEtaTot=new TH1F("effEtaTot","effEtaTot",15, eta_bins);
   TH1F* effPhiTot=new TH1F("effPhiTot","effPhiTot",20, -3.2, 3.2);
-  TH1F* effnVtxTot=new TH1F("effnVtxTot","effnVtxTot",6,10,40);
+  TH1F* effnVtxTot=new TH1F("effnVtxTot","effnVtxTot",50,0,100);
 
 
 
-  TH1F* OIplusIOL2effPt=new TH1F("OIplusIOL2effPt","OIplusIOL2effPt",16,  pt_bins);
+  TH1F* OIplusIOL2effPt=new TH1F("OIplusIOL2effPt","OIplusIOL2effPt",19,  pt_bins);
   TH1F* OIplusIOL2effEta=new TH1F("OIplusIOL2effEta","OIplusIOL2effEta",15, eta_bins);
   TH1F* OIplusIOL2effPhi=new TH1F("OIplusIOL2effPhi","OIplusIOL2effPhi",20, -3.2, 3.2);
-  TH1F* OIplusIOL2effnVtx=new TH1F("OIplusIOL2effnVtx","OIplusIOL2effnVtx",6,10,40);
+  TH1F* OIplusIOL2effnVtx=new TH1F("OIplusIOL2effnVtx","OIplusIOL2effnVtx",50,0,100);
 
-  TH1F* OIplusIOL2plusIOL1effPt=new TH1F("OIplusIOL2plusIOL1effPt","OIplusIOL2plusIOL1effPt",16,  pt_bins);
+  TH1F* OIplusIOL2plusIOL1effPt=new TH1F("OIplusIOL2plusIOL1effPt","OIplusIOL2plusIOL1effPt",19,  pt_bins);
   TH1F* OIplusIOL2plusIOL1effEta=new TH1F("OIplusIOL2plusIOL1effEta","OIplusIOL2plusIOL1effEta",15, eta_bins);
   TH1F* OIplusIOL2plusIOL1effPhi=new TH1F("OIplusIOL2plusIOL1effPhi","OIplusIOL2plusIOL1effPhi",20, -3.2, 3.2);
-  TH1F* OIplusIOL2plusIOL1effnVtx=new TH1F("OIplusIOL2plusIOL1effnVtx","OIplusIOL2plusIOL1effnVtx",6,10,40); 
+  TH1F* OIplusIOL2plusIOL1effnVtx=new TH1F("OIplusIOL2plusIOL1effnVtx","OIplusIOL2plusIOL1effnVtx",50,0,100); 
 
- 
+  OIeffPt->Sumw2(); 
+  OIeffEta->Sumw2(); 
+  OIeffPhi->Sumw2(); 
+  OIeffnVtx->Sumw2(); 
+
+  effPtTot->Sumw2(); 
+  effEtaTot->Sumw2(); 
+  effPhiTot->Sumw2(); 
+  effnVtxTot->Sumw2(); 
+
+  OIplusIOL2effPt->Sumw2();
+  OIplusIOL2effEta->Sumw2();
+  OIplusIOL2effPhi->Sumw2();
+  OIplusIOL2effnVtx->Sumw2();
+
+
+  OIplusIOL2plusIOL1effPt->Sumw2();
+  OIplusIOL2plusIOL1effEta->Sumw2();
+  OIplusIOL2plusIOL1effPhi->Sumw2();
+  OIplusIOL2plusIOL1effnVtx->Sumw2();
+
   double offlineiso04 = 100;
   
   TChain *tree = new TChain("muonNtuples/muonTree");
@@ -118,7 +138,8 @@ void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store
   tree-> SetBranchAddress("event",&ev,&evBranch);
 
 
-  int nentries = 100000;// tree->GetEntries();
+  //int nentries = tree->GetEntries();
+  int nentries = 10000000;// tree->GetEntries();
   std::cout << "Number of entries = " << nentries << std::endl;
 
   bool flagfile = false;
@@ -156,24 +177,26 @@ void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store
 
 
 
-	 if (ev -> muons.at(jmu).pt < offlinePtCut) continue;
          effPtTot->Fill(ev -> muons.at(jmu).pt);	
+
+         if(passOI)OIeffPt->Fill(ev -> muons.at(jmu).pt);
+	 if(passOI || passIOL2)OIplusIOL2effPt->Fill(ev -> muons.at(jmu).pt);
+	 if(passOI || passIOL2 || passIOL1)OIplusIOL2plusIOL1effPt->Fill(ev -> muons.at(jmu).pt);
+
+	 if (ev -> muons.at(jmu).pt < offlinePtCut) continue;
          effEtaTot->Fill(ev -> muons.at(jmu).eta);
          effPhiTot->Fill(ev -> muons.at(jmu).phi);
          effnVtxTot->Fill(ev ->nVtx);
 
 
-         if(passOI)OIeffPt->Fill(ev -> muons.at(jmu).pt);
          if(passOI)OIeffEta->Fill(ev -> muons.at(jmu).eta);
          if(passOI)OIeffPhi->Fill(ev -> muons.at(jmu).phi);
          if(passOI)OIeffnVtx->Fill(ev -> nVtx);
 
-         if(passOI || passIOL2)OIplusIOL2effPt->Fill(ev -> muons.at(jmu).pt);
          if(passOI || passIOL2)OIplusIOL2effEta->Fill(ev -> muons.at(jmu).eta);
          if(passOI || passIOL2)OIplusIOL2effPhi->Fill(ev -> muons.at(jmu).phi);
          if(passOI || passIOL2)OIplusIOL2effnVtx->Fill(ev -> nVtx);  
 
-         if(passOI || passIOL2 || passIOL1)OIplusIOL2plusIOL1effPt->Fill(ev -> muons.at(jmu).pt);
          if(passOI || passIOL2 || passIOL1)OIplusIOL2plusIOL1effEta->Fill(ev -> muons.at(jmu).eta);
          if(passOI || passIOL2 || passIOL1)OIplusIOL2plusIOL1effPhi->Fill(ev -> muons.at(jmu).phi);
          if(passOI || passIOL2 || passIOL1)OIplusIOL2plusIOL1effnVtx->Fill(ev -> nVtx); 
@@ -324,7 +347,7 @@ bool selectProbeMuon(MuonCand mu, MuonCand tagMu, TH1F* dimuon_mass){
   mu2.SetPtEtaPhiM (tagMu.pt, tagMu.eta, tagMu.phi, muonmass);
   double mumumass = (mu1 + mu2).M();
   dimuon_mass -> Fill(mumumass); 
-  if (! (mumumass > 86. && mumumass < 96. )) return false;
+  if (! (mumumass > 81. && mumumass < 101. )) return false;
   
   return true;
 }

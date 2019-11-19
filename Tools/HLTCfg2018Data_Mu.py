@@ -5304,31 +5304,6 @@ process.trackerTopology = cms.ESProducer( "TrackerTopologyEP",
   appendToDataLabel = cms.string( "" )
 )
 
-process.FastTimerService = cms.Service( "FastTimerService",
-    dqmPath = cms.untracked.string( "HLT/TimerService" ),
-    dqmModuleTimeRange = cms.untracked.double( 40.0 ),
-    enableDQMbyPath = cms.untracked.bool( False ),
-    dqmModuleTimeResolution = cms.untracked.double( 0.2 ),
-    dqmPathMemoryResolution = cms.untracked.double( 5000.0 ),
-    enableDQM = cms.untracked.bool( True ),
-    enableDQMbyModule = cms.untracked.bool( False ),
-    dqmModuleMemoryRange = cms.untracked.double( 100000.0 ),
-    dqmMemoryResolution = cms.untracked.double( 5000.0 ),
-    enableDQMbyLumiSection = cms.untracked.bool( True ),
-    dqmPathTimeResolution = cms.untracked.double( 0.5 ),
-    printEventSummary = cms.untracked.bool( False ),
-    dqmPathTimeRange = cms.untracked.double( 100.0 ),
-    dqmTimeRange = cms.untracked.double( 2000.0 ),
-    enableDQMTransitions = cms.untracked.bool( False ),
-    dqmLumiSectionsRange = cms.untracked.uint32( 2500 ),
-    dqmPathMemoryRange = cms.untracked.double( 1000000.0 ),
-    dqmMemoryRange = cms.untracked.double( 1000000.0 ),
-    dqmTimeResolution = cms.untracked.double( 5.0 ),
-    printRunSummary = cms.untracked.bool( True ),
-    dqmModuleMemoryResolution = cms.untracked.double( 500.0 ),
-    printJobSummary = cms.untracked.bool( True ),
-    enableDQMbyProcesses = cms.untracked.bool( True )
-)
 process.MessageLogger = cms.Service( "MessageLogger",
     suppressInfo = cms.untracked.vstring(  ),
     debugs = cms.untracked.PSet( 
@@ -5435,11 +5410,6 @@ process.MessageLogger = cms.Service( "MessageLogger",
       'hltPFJetCtfWithMaterialTracks',
       'hltL3TkTracksFromL2IOHit',
       'hltL3TkTracksFromL2OIHit' )
-)
-process.ThroughputService = cms.Service( "ThroughputService",
-    dqmPath = cms.untracked.string( "HLT/Throughput" ),
-    timeRange = cms.untracked.double( 60000.0 ),
-    timeResolution = cms.untracked.double( 5.828 )
 )
 
 process.hltGetConditions = cms.EDAnalyzer( "EventSetupRecordDataGetter",
@@ -12367,15 +12337,6 @@ if 'MessageLogger' in process.__dict__:
     process.MessageLogger.categories.append('HLTrigReport')
     process.MessageLogger.categories.append('FastReport')
 
-# load the DQMStore and DQMRootOutputModule
-process.load( "DQMServices.Core.DQMStore_cfi" )
-process.DQMStore.enableMultiThread = True
-
-process.dqmOutput = cms.OutputModule("DQMRootOutputModule",
-    fileName = cms.untracked.string("DQMIO.root")
-)
-
-process.DQMOutput = cms.EndPath( process.dqmOutput )
 
 # add specific customizations
 _customInfo = {}
@@ -12406,17 +12367,17 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 200
 
 process.source = cms.Source( "PoolSource",
 
- fileNames = cms.untracked.vstring('/store/data/Run2018D/SingleMuon/AOD/PromptReco-v2/000/325/170/00000/6D6950A9-69BE-514F-9A37-0F4B80DA5CA4.root'),
+ fileNames = cms.untracked.vstring('/store/data/Run2018D/SingleMuon/RAW-RECO/ZMu-PromptReco-v2/000/325/172/00000/FF018C80-477C-CA44-99F0-04F809E1BA0B.root'),
 
-  secondaryFileNames=cms.untracked.vstring(
-'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/13A7C0D8-97DF-324A-8741-F9BA4BF0C3B8.root',
-'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/528B95C7-D5A5-8746-920D-46DF7D0A0ECC.root',
-'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/6F11CC6C-6217-CC42-9FDA-078177D5C49E.root',
-'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/7505C042-4A76-914C-8BB8-1B878D076AC9.root',
-'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/CEC318AC-752B-474A-99AC-78F33856C9E8.root'
+#  secondaryFileNames=cms.untracked.vstring(
+#'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/13A7C0D8-97DF-324A-8741-F9BA4BF0C3B8.root',
+#'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/528B95C7-D5A5-8746-920D-46DF7D0A0ECC.root',
+#'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/6F11CC6C-6217-CC42-9FDA-078177D5C49E.root',
+#'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/7505C042-4A76-914C-8BB8-1B878D076AC9.root',
+#'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/CEC318AC-752B-474A-99AC-78F33856C9E8.root'
 
 
-)
+#)
 )
 
 
@@ -12434,6 +12395,7 @@ process.muonNtuples = cms.EDAnalyzer("MuonNtuples",
                    tagTriggerSummary        = cms.untracked.InputTag("hltTriggerSummaryAOD::HLT"),
                    triggerProcess   = cms.string("TEST"),
                    L3Candidates             = cms.untracked.InputTag("hltIterL3MuonCandidates"),
+                   L3CandidatesNoID         = cms.untracked.InputTag("hltIterL3MuonsNoID"),
                    L2Candidates             = cms.untracked.InputTag("hltL2MuonCandidates"),
                    L1Candidates             = cms.untracked.InputTag('hltGtStage2Digis','Muon'),
                    TkMuCandidates           = cms.untracked.InputTag("hltIterL3OIL3MuonCandidates"),
