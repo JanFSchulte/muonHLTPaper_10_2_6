@@ -5304,31 +5304,6 @@ process.trackerTopology = cms.ESProducer( "TrackerTopologyEP",
   appendToDataLabel = cms.string( "" )
 )
 
-process.FastTimerService = cms.Service( "FastTimerService",
-    dqmPath = cms.untracked.string( "HLT/TimerService" ),
-    dqmModuleTimeRange = cms.untracked.double( 40.0 ),
-    enableDQMbyPath = cms.untracked.bool( False ),
-    dqmModuleTimeResolution = cms.untracked.double( 0.2 ),
-    dqmPathMemoryResolution = cms.untracked.double( 5000.0 ),
-    enableDQM = cms.untracked.bool( True ),
-    enableDQMbyModule = cms.untracked.bool( False ),
-    dqmModuleMemoryRange = cms.untracked.double( 100000.0 ),
-    dqmMemoryResolution = cms.untracked.double( 5000.0 ),
-    enableDQMbyLumiSection = cms.untracked.bool( True ),
-    dqmPathTimeResolution = cms.untracked.double( 0.5 ),
-    printEventSummary = cms.untracked.bool( False ),
-    dqmPathTimeRange = cms.untracked.double( 100.0 ),
-    dqmTimeRange = cms.untracked.double( 2000.0 ),
-    enableDQMTransitions = cms.untracked.bool( False ),
-    dqmLumiSectionsRange = cms.untracked.uint32( 2500 ),
-    dqmPathMemoryRange = cms.untracked.double( 1000000.0 ),
-    dqmMemoryRange = cms.untracked.double( 1000000.0 ),
-    dqmTimeResolution = cms.untracked.double( 5.0 ),
-    printRunSummary = cms.untracked.bool( True ),
-    dqmModuleMemoryResolution = cms.untracked.double( 500.0 ),
-    printJobSummary = cms.untracked.bool( True ),
-    enableDQMbyProcesses = cms.untracked.bool( True )
-)
 process.MessageLogger = cms.Service( "MessageLogger",
     suppressInfo = cms.untracked.vstring(  ),
     debugs = cms.untracked.PSet( 
@@ -5435,11 +5410,6 @@ process.MessageLogger = cms.Service( "MessageLogger",
       'hltPFJetCtfWithMaterialTracks',
       'hltL3TkTracksFromL2IOHit',
       'hltL3TkTracksFromL2OIHit' )
-)
-process.ThroughputService = cms.Service( "ThroughputService",
-    dqmPath = cms.untracked.string( "HLT/Throughput" ),
-    timeRange = cms.untracked.double( 60000.0 ),
-    timeResolution = cms.untracked.double( 5.828 )
 )
 
 process.hltGetConditions = cms.EDAnalyzer( "EventSetupRecordDataGetter",
@@ -12368,15 +12338,6 @@ if 'MessageLogger' in process.__dict__:
     process.MessageLogger.categories.append('FastReport')
 
 # load the DQMStore and DQMRootOutputModule
-process.load( "DQMServices.Core.DQMStore_cfi" )
-process.DQMStore.enableMultiThread = True
-
-process.dqmOutput = cms.OutputModule("DQMRootOutputModule",
-    fileName = cms.untracked.string("DQMIO.root")
-)
-
-process.DQMOutput = cms.EndPath( process.dqmOutput )
-
 # add specific customizations
 _customInfo = {}
 _customInfo['menuType'  ]= "GRun"
@@ -12405,7 +12366,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 200
 
 
-process.source = cms.Source( "PoolSource",
+'''process.source = cms.Source( "PoolSource",
 
  fileNames = cms.untracked.vstring('/store/mc/RunIIFall18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU0to70_102X_upgrade2018_realistic_v11-v1/110008/D889B4ED-CDE8-7346-B041-A9A940F88155.root'),
 
@@ -12414,9 +12375,9 @@ process.source = cms.Source( "PoolSource",
 '/store/mc/RunIIFall18wmLHEGS/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM/102X_upgrade2018_realistic_v11-v1/110002/E1ABA16C-A87E-8247-984C-49CB38FF1ABC.root'
 
 )
-)
+)'''
 
-'''
+
 process.source = cms.Source( "PoolSource",
 
  fileNames = cms.untracked.vstring('/store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/AODSIM/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/00001/5BA3BD2D-737C-3B44-9542-6A4ABBB2D54F.root'),
@@ -12429,7 +12390,7 @@ process.source = cms.Source( "PoolSource",
 )
 
 )
-'''
+
 
 
 from RecoMuon.TrackingTools.MuonServiceProxy_cff import *
@@ -12439,12 +12400,13 @@ process.muonNtuples = cms.EDAnalyzer("MuonNtuples",
                    MuonServiceProxy,
                    offlineVtx               = cms.InputTag("offlinePrimaryVertices"),
                    offlineMuons             = cms.InputTag("muons"),
-                   triggerResult            = cms.untracked.InputTag("TriggerResults::TEST"),
-                   triggerSummary           = cms.untracked.InputTag("hltTriggerSummaryAOD::TEST"),
+                   triggerResult            = cms.untracked.InputTag("TriggerResults::MYHLT"),
+                   triggerSummary           = cms.untracked.InputTag("hltTriggerSummaryAOD::MYHLT"),
                    tagTriggerResult         = cms.untracked.InputTag("TriggerResults::HLT"),
                    tagTriggerSummary        = cms.untracked.InputTag("hltTriggerSummaryAOD::HLT"),
                    triggerProcess   = cms.string("TEST"),
                    L3Candidates             = cms.untracked.InputTag("hltIterL3MuonCandidates"),
+                   L3CandidatesNoID         = cms.untracked.InputTag("hltIterL3MuonsNoID"),
                    L2Candidates             = cms.untracked.InputTag("hltL2MuonCandidates"),
                    L1Candidates             = cms.untracked.InputTag('hltGtStage2Digis','Muon'),
                    TkMuCandidates           = cms.untracked.InputTag("hltIterL3OIL3MuonCandidates"),

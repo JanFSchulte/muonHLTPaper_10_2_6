@@ -99,8 +99,8 @@ void SetStyle::SetPars(TStyle *gStyle){
 
   // Margins:
   gStyle->SetPadTopMargin(0.05);
-  gStyle->SetPadBottomMargin(0.13);
-  gStyle->SetPadLeftMargin(0.16);
+  gStyle->SetPadBottomMargin(0.14);
+  gStyle->SetPadLeftMargin(0.15);
   gStyle->SetPadRightMargin(0.04);
 
   // For the Global title:
@@ -123,8 +123,8 @@ void SetStyle::SetPars(TStyle *gStyle){
   gStyle->SetTitleColor(1, "XYZ");
   gStyle->SetTitleFont(42, "XYZ");
   gStyle->SetTitleSize(0.06, "XYZ");
-  // gStyle->SetTitleXSize(Float_t size = 0.02); // Another way to set the size?
-  // gStyle->SetTitleYSize(Float_t size = 0.02);
+  gStyle->SetTitleXSize(0.5); // Another way to set the size?
+  gStyle->SetTitleYSize(0.5);
   gStyle->SetTitleXOffset(0.9);
   gStyle->SetTitleYOffset(1.25);
   // gStyle->SetTitleOffset(1.1, "Y"); // Another way to set the Offset
@@ -134,7 +134,7 @@ void SetStyle::SetPars(TStyle *gStyle){
   gStyle->SetLabelColor(1, "XYZ");
   gStyle->SetLabelFont(42, "XYZ");
   gStyle->SetLabelOffset(0.007, "XYZ");
-  gStyle->SetLabelSize(0.03, "XYZ");
+  gStyle->SetLabelSize(0.05, "XYZ");
 
   // For the axis:
 

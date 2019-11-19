@@ -1,5 +1,3 @@
-
-
 #include "SetStyle.C"
 void PlotStack(){
 
@@ -9,7 +7,7 @@ st.SetPars(gStyle);
 
 
 
-TFile *f=new TFile("PromptRecoD_IterL3preFilter.root","READ");
+	TFile *f=new TFile("../PromptRecoD_IterL3preFilter_save.root","READ");
 
 
   TH1F *OIeffPt = (TH1F*)f->Get("OIeffPt");
@@ -26,20 +24,22 @@ TFile *f=new TFile("PromptRecoD_IterL3preFilter.root","READ");
   TH1F *OIplusIOL2plusIOL1effnVtx = (TH1F*)f->Get("OIplusIOL2plusIOL1effnVtx");
 
   OIplusIOL2plusIOL1effEta->GetYaxis()->SetRangeUser(0.80,1.05);
-  OIplusIOL2plusIOL1effEta->GetYaxis()->SetTitle(" HLT Efficiency"); 
+  OIplusIOL2plusIOL1effEta->GetYaxis()->SetTitle(" HLT Reconstruction Efficiency"); 
   OIplusIOL2plusIOL1effEta->GetXaxis()->SetTitle("#eta (#mu) ");
 
   OIplusIOL2plusIOL1effPt->GetYaxis()->SetRangeUser(0.80,1.05);
-  OIplusIOL2plusIOL1effPt->GetYaxis()->SetTitle(" HLT Efficiency");
+  OIplusIOL2plusIOL1effPt->GetXaxis()->SetRangeUser(30,500);
+  OIplusIOL2plusIOL1effPt->GetYaxis()->SetTitle(" HLT Reconstruction Efficiency");
   OIplusIOL2plusIOL1effPt->GetXaxis()->SetTitle("p_{T} (#mu) [GeV] ");
 
   OIplusIOL2plusIOL1effPhi->GetYaxis()->SetRangeUser(0.80,1.05);
-  OIplusIOL2plusIOL1effPhi->GetYaxis()->SetTitle(" HLT Efficiency");
+  OIplusIOL2plusIOL1effPhi->GetYaxis()->SetTitle(" HLT Reconstruction Efficiency");
   OIplusIOL2plusIOL1effPhi->GetXaxis()->SetTitle("#phi (#mu) ");
 
   OIplusIOL2plusIOL1effnVtx->GetYaxis()->SetRangeUser(0.80,1.05);
-  OIplusIOL2plusIOL1effnVtx->GetYaxis()->SetTitle(" HLT Efficiency");
-  OIplusIOL2plusIOL1effnVtx->GetXaxis()->SetTitle("n_{reco. vertices} (#mu) ");
+  OIplusIOL2plusIOL1effnVtx->GetXaxis()->SetRangeUser(0,60);
+  OIplusIOL2plusIOL1effnVtx->GetYaxis()->SetTitle(" HLT Reconstruction Efficiency");
+  OIplusIOL2plusIOL1effnVtx->GetXaxis()->SetTitle("Number of reconstructed primary vertices ");
 
 
 
@@ -47,21 +47,13 @@ TFile *f=new TFile("PromptRecoD_IterL3preFilter.root","READ");
 
 
 
-  TPaveText *pCMS = new TPaveText(0.1638796,0.8101045,0.8645485,0.9721254,"brNDC");
+  TPaveText *pCMS = new TPaveText(0.1238796,0.95,0.8645485,0.99,"brNDC");
   pCMS->SetBorderSize(0);
   pCMS->SetFillStyle(0);
   pCMS->SetTextAlign(11);
   pCMS->SetTextFont(42);
   pCMS->SetTextSize(0.04);
-  pCMS->AddText("                                        #sqrt{s}= 13 TeV (2018)");
-  pCMS->AddText("               ");
-  pCMS->AddText("               ");
-  pCMS->AddText("               ");
-  pCMS->AddText("               ");
-  pCMS->AddText("#bf{CMS} ");
-  pCMS->AddText("               ");
-  pCMS->AddText("               ");
-  pCMS->AddText("#it{Preliminary}");
+  pCMS->AddText("#bf{CMS} #it{Preliminary}                           #sqrt{s}= 13 TeV (2018)");
 
   char Legname1[100];
 
@@ -94,11 +86,12 @@ TFile *f=new TFile("PromptRecoD_IterL3preFilter.root","READ");
  OIplusIOL2plusIOL1effPt->SetFillColor(kRed-10);
  OIplusIOL2effPt->SetFillColor(kRed);
  OIeffPt->SetFillColor(kRed+2);
- OIplusIOL2plusIOL1effPt->Draw("hist");
- OIplusIOL2effPt->Draw("hist same");
- OIeffPt->Draw("hist same");
+ OIplusIOL2plusIOL1effPt->Draw("hist ");
+ OIplusIOL2effPt->Draw("hist same ");
+ OIeffPt->Draw("hist same ");
  pCMS->Draw();
  leg_1D[0]->Draw();
+ gPad->RedrawAxis();
  c1->SaveAs("StackEffvsPt.pdf");
  c1->SaveAs("StackEffvsPt.png");
 
@@ -120,6 +113,7 @@ TFile *f=new TFile("PromptRecoD_IterL3preFilter.root","READ");
  OIeffEta->Draw("hist same");
  pCMS->Draw();
  leg_1D[1]->Draw();
+ gPad->RedrawAxis();
  c2->SaveAs("StackEffvsEta.pdf");
  c2->SaveAs("StackEffvsEta.png");
 
@@ -138,6 +132,7 @@ TFile *f=new TFile("PromptRecoD_IterL3preFilter.root","READ");
  OIeffPhi->Draw("hist same");
  pCMS->Draw();
  leg_1D[2]->Draw();
+ gPad->RedrawAxis();
  c3->SaveAs("StackEffvsPhi.pdf");
  c3->SaveAs("StackEffvsPhi.png");
 
@@ -151,11 +146,15 @@ TFile *f=new TFile("PromptRecoD_IterL3preFilter.root","READ");
  OIplusIOL2plusIOL1effnVtx->SetFillColor(kRed-10);
  OIplusIOL2effnVtx->SetFillColor(kRed);
  OIeffnVtx->SetFillColor(kRed+2);
+ //OIplusIOL2plusIOL1effnVtx->Rebin(2);
+ //OIplusIOL2effnVtx->Rebin(2);
+ //OIeffnVtx->Rebin(2);
  OIplusIOL2plusIOL1effnVtx->Draw("hist");
  OIplusIOL2effnVtx->Draw("hist same");
  OIeffnVtx->Draw("hist same");
  pCMS->Draw();
  leg_1D[3]->Draw();
+ gPad->RedrawAxis();
  c4->SaveAs("StackEffvsnVtx.pdf");
  c4->SaveAs("StackEffvsnVtx.png");
 

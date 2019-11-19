@@ -37,7 +37,7 @@ float getTrailingPtCut(int);
 
 void printProgBar(int);
 
-double pt_bins[17]  = { 5, 7, 9, 12, 16,  20 ,  24 ,  27 ,   30,   35,   40,   45,   50,  60, 70 ,  90, 150 };
+double pt_bins[20]  = { 5, 7, 9, 12, 16,  20 ,  24 ,  27 ,   30,   35,   40,   45,   50,  60, 70 ,  90, 150, 250,500,1000 };
 double dz_bins[11]  = {-15, -8, -6, -4, -2, 0, 2, 4, 6, 8, 15};
 double eta_bins[16] = {-2.4, -2.1, -1.6, -1.2, -1.04, -0.9, -0.3, -0.2,  0.2, 0.3, 0.9, 1.04, 1.2, 1.6, 2.1, 2.4};
 double iso_bins[12] = { 0  , 0.02, 0.04, 0.06, 0.08,  0.1, 0.12, 0.16, 0.2, 0.3, 0.6, 1   };
@@ -77,7 +77,7 @@ std::string L3filter      = "hltDoubleMu3L3FilteredNoVtx::TEST";
 //                                          *
 std::string thepassfilter  = L3filter;
 //std::string theprobefilter = L1filter; 
-float offlinePtCut         = 28.;
+float offlinePtCut         = 26.;
 //                                          *
 //                                          *
 // ******************************************
@@ -97,10 +97,10 @@ void readNtuplesPrefilter_IterL3(TString inputfilename="/eos/uscms/store/user/bm
   TH1F* tagMuonPt               = new TH1F("h_tagMuonPt"            ,"tagMuonPt"        ,  150,  0,  150 );
   TH1F* nvtx_event              = new TH1F("h_nvtx_event"           ,"nvtx_event"       ,   60,  0,   60 );
  
-  TEfficiency* muonPt_barrel    = new TEfficiency("muonPt_barrel"   ,"muonPt_barrel"    ,   16,  pt_bins );
-  TEfficiency* muonPt_endcap    = new TEfficiency("muonPt_endcap"   ,"muonPt_endcap"    ,   16,  pt_bins );
-  TEfficiency* muonPt           = new TEfficiency("muonPt"          ,"muonPt"           ,   16,  pt_bins ); 
-  TEfficiency* muonPtTurnOn     = new TEfficiency("muonPtTurnOn"    ,"muonPtTurnOn"     ,   16,  pt_bins ); 
+  TEfficiency* muonPt_barrel    = new TEfficiency("muonPt_barrel"   ,"muonPt_barrel"    ,   19,  pt_bins );
+  TEfficiency* muonPt_endcap    = new TEfficiency("muonPt_endcap"   ,"muonPt_endcap"    ,   19,  pt_bins );
+  TEfficiency* muonPt           = new TEfficiency("muonPt"          ,"muonPt"           ,   19,  pt_bins ); 
+  TEfficiency* muonPtTurnOn     = new TEfficiency("muonPtTurnOn"    ,"muonPtTurnOn"     ,   19,  pt_bins ); 
   TEfficiency* muonEta          = new TEfficiency("muonEta"         ,"muonEta"          ,   15, eta_bins );
   TEfficiency* muonPhi          = new TEfficiency("muonPhi"         ,"muonPhi"          ,   20, -3.2, 3.2);
   TEfficiency* muonEff          = new TEfficiency("muonEff"         ,"muonEff"          ,    1,   0., 1.0);
@@ -114,41 +114,41 @@ void readNtuplesPrefilter_IterL3(TString inputfilename="/eos/uscms/store/user/bm
   TEfficiency* muonPixHit       = new TEfficiency("muonPixHit"      , "muonPixHit"      ,   20,  -0.5,19.5);
   TEfficiency* muonLayHit       = new TEfficiency("muonLayHit"      , "muonLayHit"      ,   16,   2.5,18.5);
   TEfficiency* muonPixLay       = new TEfficiency("muonPixLay"      , "muonPixLay"      ,    7,  -0.5, 6.5);
-  TEfficiency* muoninnerPt      = new TEfficiency("muoninnerPt"     , "muoninnerPt"     ,   16,   pt_bins );
+  TEfficiency* muoninnerPt      = new TEfficiency("muoninnerPt"     , "muoninnerPt"     ,   19,   pt_bins );
   TEfficiency* muoninnerEta     = new TEfficiency("muoninnerEta"    , "muoninnerEta"    ,   15,   eta_bins);
   TEfficiency* muoninnerPhi     = new TEfficiency("muoninnerPhi"    , "muoninnerPhi"    ,   20,  -3.2, 3.2);
   
-  TEfficiency* failingMuonPt    = new TEfficiency("failingMuonPt"   ,"failingMuonPt"    ,   16,  pt_bins ); 
+  TEfficiency* failingMuonPt    = new TEfficiency("failingMuonPt"   ,"failingMuonPt"    ,   19,  pt_bins ); 
   TEfficiency* failingMuonEta   = new TEfficiency("failingMuonEta"  ,"failingMuonEta"   ,   15, eta_bins );
   TEfficiency* failingMuonPhi   = new TEfficiency("failingMuonPhi"  ,"failingMuonPhi"   ,   20, -3.2, 3.2);
   TEfficiency* failingMuonEff   = new TEfficiency("failingMuonEff"  ,"failingMuonEff"   ,   1 ,   0., 1.0);
 
-  TH1F* PassingProbePt          = new TH1F("h_PassingProbePt"       ,"PassingMuonPt"    ,  16,  pt_bins );
+  TH1F* PassingProbePt          = new TH1F("h_PassingProbePt"       ,"PassingMuonPt"    ,  19,  pt_bins );
   TH1F* PassingProbeEta         = new TH1F("h_PassingProbeEta"      ,"PassingMuonEta"   ,  15, eta_bins );
   TH1F* PassingProbePhi         = new TH1F("h_PassingProbePhi"      ,"PassingMuonPhi"   ,  20, -3.2, 3.2);
   TH1F* PassingProbeMll         = new TH1F("h_PassingProbeMll"      ,"PassingMuonMll"   ,  20,  86., 96.); 
 
-  TH1F* FailingProbePt          = new TH1F("h_FailingProbePt"       ,"FailingMuonPt"    ,  16,  pt_bins );
+  TH1F* FailingProbePt          = new TH1F("h_FailingProbePt"       ,"FailingMuonPt"    ,  19,  pt_bins );
   TH1F* FailingProbeEta         = new TH1F("h_FailingProbeEta"      ,"FailingMuonEta"   ,  15, eta_bins );
   TH1F* FailingProbePhi         = new TH1F("h_FailingProbePhi"      ,"FailingMuonPhi"   ,  20, -3.2, 3.2);
   TH1F* FailingProbeMll         = new TH1F("h_FailingProbeMll"      ,"FailingMuonMll"   ,  20,  86., 96.);
 
   // di-muon efficiencies 
-  TEfficiency* diMuonPt         = new TEfficiency("diMuonPt"      ,"diMuonPt"       ,   16,  pt_bins  , 16,  pt_bins ); 
+  TEfficiency* diMuonPt         = new TEfficiency("diMuonPt"      ,"diMuonPt"       ,   19,  pt_bins  , 19,  pt_bins ); 
   TEfficiency* diMuonEta        = new TEfficiency("diMuonEta"     ,"diMuonEta"      ,   15, eta_bins  , 15, eta_bins );
   TEfficiency* diMuonPhi        = new TEfficiency("diMuonPhi"     ,"diMuonPhi"      ,   20, -3.2, 3.2 , 20, -3.2, 3.2);
   TEfficiency* diMuonEff        = new TEfficiency("diMuonEff"     ,"diMuonEff"      ,    1,   0., 1.0);
   TEfficiency* diMuonDeltaR     = new TEfficiency("diMuonDeltaR"  ,"diMuonDeltaR"   ,   30,   0., 3.0);
-  TEfficiency* diMuonLeadPt     = new TEfficiency("diMuonLeadPt"  ,"diMuonLeadPt"   ,   16,  pt_bins ); 
+  TEfficiency* diMuonLeadPt     = new TEfficiency("diMuonLeadPt"  ,"diMuonLeadPt"   ,   19,  pt_bins ); 
   TEfficiency* diMuonLeadEta    = new TEfficiency("diMuonLeadEta" ,"diMuonLeadEta"  ,   15,  eta_bins );
   TEfficiency* diMuonLeadPhi    = new TEfficiency("diMuonLeadPhi" ,"diMuonLeadPhi"  ,   20, -3.2, 3.2);
-  TEfficiency* diMuonTrailPt    = new TEfficiency("diMuonTrailPt" ,"diMuonTrailPt"  ,   16,  pt_bins ); 
+  TEfficiency* diMuonTrailPt    = new TEfficiency("diMuonTrailPt" ,"diMuonTrailPt"  ,   19,  pt_bins ); 
   TEfficiency* diMuonTrailEta   = new TEfficiency("diMuonTrailEta","diMuonTrailEta" ,   15, eta_bins );
   TEfficiency* diMuonTrailPhi   = new TEfficiency("diMuonTrailPhi","diMuonTrailPhi" ,   20, -3.2, 3.2);
 
-  TEfficiency* nvtx             = new TEfficiency("nvtx"             ,"nvtx"             ,   60,    0,  60);
-  TEfficiency* nvtx_barrel      = new TEfficiency("nvtx_barrel"      ,"nvtx_barrel"      ,   60,    0,  60);
-  TEfficiency* nvtx_endcap      = new TEfficiency("nvtx_endcap"      ,"nvtx_endcap"      ,   60,    0,  60);
+  TEfficiency* nvtx             = new TEfficiency("nvtx"             ,"nvtx"             ,   50,    0,  100);
+  TEfficiency* nvtx_barrel      = new TEfficiency("nvtx_barrel"      ,"nvtx_barrel"      ,   50,    0,  100);
+  TEfficiency* nvtx_endcap      = new TEfficiency("nvtx_endcap"      ,"nvtx_endcap"      ,   50,    0,  100);
    
   double offlineiso04 = 100;
   
@@ -169,7 +169,8 @@ void readNtuplesPrefilter_IterL3(TString inputfilename="/eos/uscms/store/user/bm
   tree-> SetBranchAddress("event",&ev,&evBranch);
 
 
-  int nentries = tree->GetEntries();
+  int nentries = 10000000;
+  //int nentries = tree->GetEntries();
   std::cout << "Number of entries = " << nentries << std::endl;
 
   bool flagfile = false;
@@ -250,6 +251,7 @@ void readNtuplesPrefilter_IterL3(TString inputfilename="/eos/uscms/store/user/bm
 	failingMuonPhi -> Fill( !pass, ev->muons.at(jmu).phi);
 	failingMuonEff -> Fill( !pass, 0.5                    );
 
+	nvtx           -> Fill( pass, ev -> nVtx             );
       } // nmuons
     }
     
@@ -441,7 +443,7 @@ bool selectProbeMuon(MuonCand mu, MuonCand tagMu, TH1F* dimuon_mass){
   mu2.SetPtEtaPhiM (tagMu.pt, tagMu.eta, tagMu.phi, muonmass);
   double mumumass = (mu1 + mu2).M();
   dimuon_mass -> Fill(mumumass); 
-  if (! (mumumass > 86. && mumumass < 96. )) return false;
+  if (! (mumumass > 81. && mumumass < 101. )) return false;
   
   return true;
 }
