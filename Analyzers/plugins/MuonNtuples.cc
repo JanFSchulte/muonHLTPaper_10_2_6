@@ -161,7 +161,8 @@ class MuonNtuples : public edm::EDAnalyzer {
   edm::InputTag l3candTag_;
   edm::EDGetTokenT<reco::RecoChargedCandidateCollection> l3candToken_;
   edm::InputTag l3candNoIDTag_;
-  edm::EDGetTokenT<std::vector<reco::Muon>> l3candNoIDToken_; 
+  //edm::EDGetTokenT<std::vector<reco::Muon>> l3candNoIDToken_; 
+  edm::EDGetTokenT<reco::RecoChargedCandidateCollection> l3candNoIDToken_;
   edm::InputTag l2candTag_;
   edm::EDGetTokenT<reco::RecoChargedCandidateCollection> l2candToken_; 
   edm::InputTag l1candTag_;
@@ -237,11 +238,12 @@ MuonNtuples::MuonNtuples(const edm::ParameterSet& cfg):
   tagTriggerSummTag_      (cfg.getUntrackedParameter<edm::InputTag>("tagTriggerSummary")), 
     tagTriggerSummToken_    (consumes<trigger::TriggerEvent>(tagTriggerSummTag_)),
   // triggerProcess_         (cfg.getParameter<std::string>("triggerProcess")),
-
   l3candTag_              (cfg.getUntrackedParameter<edm::InputTag>("L3Candidates")),
     l3candToken_            (consumes<reco::RecoChargedCandidateCollection>(l3candTag_)),
   l3candNoIDTag_              (cfg.getUntrackedParameter<edm::InputTag>("L3CandidatesNoID")),
-    l3candNoIDToken_            (consumes<std::vector<reco::Muon>>(l3candNoIDTag_)),
+    l3candNoIDToken_            (consumes<reco::RecoChargedCandidateCollection>(l3candNoIDTag_)),
+  //l3candNoIDTag_              (cfg.getUntrackedParameter<edm::InputTag>("L3CandidatesNoID")),
+  //  l3candNoIDToken_            (consumes<std::vector<reco::Muon>>(l3candNoIDTag_)),
   l2candTag_              (cfg.getUntrackedParameter<edm::InputTag>("L2Candidates")),
     l2candToken_            (consumes<reco::RecoChargedCandidateCollection>(l2candTag_)),
   l1candTag_              (cfg.getUntrackedParameter<edm::InputTag>("L1Candidates")),
@@ -411,7 +413,8 @@ void MuonNtuples::analyze (const edm::Event &event, const edm::EventSetup &event
     fillHltMuons(l3cands, event, HLTCollectionType::iL3muons);
 
  // Handle the 2nd online muon collection and fill online muons //the hltmuons branch
-  edm::Handle<reco::MuonCollection> l3candsNoID;
+  //edm::Handle<reco::MuonCollection> l3candsNoID;
+  edm::Handle<reco::RecoChargedCandidateCollection> l3candsNoID;
   if (event.getByToken(l3candNoIDToken_, l3candsNoID))
     fillHltMuons(l3candsNoID, event, HLTCollectionType::iL3NoIDmuons);
 
@@ -798,6 +801,7 @@ void MuonNtuples::fillHltMuons(const edm::Handle<reco::RecoChargedCandidateColle
     reco::TrackRef trkmu = candref->track();
     theL3Mu.trkpt   = trkmu -> pt();
     if (type == HLTCollectionType::iL3muons)     { event_.hltmuons    .push_back(theL3Mu);  continue; }
+    if (type == HLTCollectionType::iL3NoIDmuons) { event_.hltNoIDmuons.push_back(theL3Mu);  continue; }
     if (type == HLTCollectionType::iL3OImuons)   { event_.hltOImuons  .push_back(theL3Mu);  continue; }
     if (type == HLTCollectionType::iL3IOmuons)   { event_.hltIOmuons  .push_back(theL3Mu);  continue; }
     if (type == HLTCollectionType::itkmuons)     { event_.tkmuons     .push_back(theL3Mu);  continue; }

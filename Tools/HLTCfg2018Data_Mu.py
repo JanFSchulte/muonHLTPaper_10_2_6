@@ -8233,6 +8233,10 @@ process.hltIterL3MuonTracks = cms.EDProducer( "HLTMuonTrackSelector",
     copyMVA = cms.bool( False ),
     originalMVAVals = cms.InputTag( "none" )
 )
+process.hltIterL3MuonCandidatesNoID = cms.EDProducer( "L3MuonCandidateProducerFromMuons",
+    InputObjects = cms.InputTag( "hltIterL3MuonsNoID" )
+)
+
 process.hltIterL3MuonCandidates = cms.EDProducer( "L3MuonCandidateProducerFromMuons",
     InputObjects = cms.InputTag( "hltIterL3Muons" )
 )
@@ -12260,7 +12264,7 @@ process.HLTIterativeTrackingIter023ForIterL3FromL1Muon = cms.Sequence( process.H
 process.HLTIterL3IOmuonFromL1TkCandidateSequence = cms.Sequence( process.HLTRecopixelvertexingSequenceForIterL3FromL1Muon + process.HLTIterativeTrackingIter023ForIterL3FromL1Muon )
 process.HLTIterL3muonTkCandidateSequence = cms.Sequence( process.HLTDoLocalPixelSequence + process.HLTDoLocalStripSequence + process.HLTIterL3OIAndIOFromL2muonTkCandidateSequence + process.hltL1MuonsPt0 + process.HLTIterL3IOmuonFromL1TkCandidateSequence )
 process.HLTL3muonrecoNocandSequence = cms.Sequence( process.HLTIterL3muonTkCandidateSequence + process.hltIterL3MuonMerged + process.hltIterL3MuonAndMuonFromL1Merged + process.hltIterL3GlbMuon + process.hltIterL3MuonsNoID + process.hltIterL3Muons + process.hltL3MuonsIterL3Links + process.hltIterL3MuonTracks )
-process.HLTL3muonrecoSequence = cms.Sequence( process.HLTL3muonrecoNocandSequence + process.hltIterL3MuonCandidates )
+process.HLTL3muonrecoSequence = cms.Sequence( process.HLTL3muonrecoNocandSequence + process.hltIterL3MuonCandidatesNoID + process.hltIterL3MuonCandidates )
 process.HLTDoFullUnpackingEgammaEcalMFSequence = cms.Sequence( process.hltEcalDigis + process.hltEcalPreshowerDigis + process.hltEcalUncalibRecHit + process.hltEcalDetIdToBeRecovered + process.hltEcalRecHit + process.hltEcalPreshowerRecHit )
 process.HLTDoLocalHcalSequence = cms.Sequence( process.hltHcalDigis + process.hltHbhePhase1Reco + process.hltHbhereco + process.hltHfprereco + process.hltHfreco + process.hltHoreco )
 process.HLTPFClusteringEcalMFForMuons = cms.Sequence( process.hltRecHitInRegionForMuonsMF + process.hltRecHitInRegionForMuonsES + process.hltParticleFlowRecHitECALForMuonsMF + process.hltParticleFlowRecHitPSForMuons + process.hltParticleFlowClusterECALUncorrectedForMuonsMF + process.hltParticleFlowClusterPSForMuons + process.hltParticleFlowClusterECALForMuonsMF )
@@ -12395,7 +12399,7 @@ process.muonNtuples = cms.EDAnalyzer("MuonNtuples",
                    tagTriggerSummary        = cms.untracked.InputTag("hltTriggerSummaryAOD::HLT"),
                    triggerProcess   = cms.string("TEST"),
                    L3Candidates             = cms.untracked.InputTag("hltIterL3MuonCandidates"),
-                   L3CandidatesNoID         = cms.untracked.InputTag("hltIterL3MuonsNoID"),
+                   L3CandidatesNoID         = cms.untracked.InputTag("hltIterL3MuonCandidatesNoID"),
                    L2Candidates             = cms.untracked.InputTag("hltL2MuonCandidates"),
                    L1Candidates             = cms.untracked.InputTag('hltGtStage2Digis','Muon'),
                    TkMuCandidates           = cms.untracked.InputTag("hltIterL3OIL3MuonCandidates"),
