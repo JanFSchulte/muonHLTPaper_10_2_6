@@ -1,10 +1,10 @@
-# hltGetConfiguration orcoff:/cdaq/physics/Run2018/2e34/v3.6.1/HLT/V2 --globaltag 102X_upgrade2018_realistic_v15 --path HLTriggerFirstPath,HLT_IsoMu24_v*,HLT_IsoMu27_v*,HLT_Mu50_v*,HLT_OldMu100_v*,HLT_TkMu100_v*,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8_v*,HLTriggerFinalPath,HLTAnalyzerEndpath --input /store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/00000/EF00BD86-2DB3-3645-8521-A3F29E89440D.root --process MYHLT --full --offline --mc --l1-emulator uGT --l1 L1Menu_Collisions2018_v2_1_0-d1_xml --prescale none --max-events 100 --output none
+# hltGetConfiguration orcoff:/cdaq/physics/Run2018/2e34/v3.6.1/HLT/V2 --globaltag 101X_dataRun2_HLT_v7 --path HLTriggerFirstPath,HLT_IsoMu24_v*,HLT_IsoMu27_v*,HLT_Mu50_v*,HLT_OldMu100_v*,HLT_TkMu100_v*,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8_v*,HLTriggerFinalPath,HLTAnalyzerEndpath --input file:/afs/cern.ch/user/k/kplee/work/public/ROOTFile_Test/RAW_SingleMuon_Run2018A_Run316361.root --process MYHLT --full --offline --l1-emulator uGT --l1 L1Menu_Collisions2018_v2_1_0-d1_xml --prescale none --max-events 100 --output none
 
 # /cdaq/physics/Run2018/2e34/v3.6.1/HLT/V2 (CMSSW_10_1_10_HLT1)
 
 import FWCore.ParameterSet.Config as cms
 
-process = cms.Process( "MYHLT" )
+process = cms.Process( "TEST" )
 
 process.HLTConfigVersion = cms.PSet(
   tableName = cms.string('/cdaq/physics/Run2018/2e34/v3.6.1/HLT/V2')
@@ -8233,9 +8233,6 @@ process.hltIterL3MuonTracks = cms.EDProducer( "HLTMuonTrackSelector",
     copyMVA = cms.bool( False ),
     originalMVAVals = cms.InputTag( "none" )
 )
-process.hltIterL3MuonCandidatesNoID = cms.EDProducer( "L3MuonCandidateProducerFromMuons",
-    InputObjects = cms.InputTag( "hltIterL3MuonsNoID" )
-)
 process.hltIterL3MuonCandidates = cms.EDProducer( "L3MuonCandidateProducerFromMuons",
     InputObjects = cms.InputTag( "hltIterL3Muons" )
 )
@@ -11937,7 +11934,7 @@ process.hltIter2HighPtTkMuMerged = cms.EDProducer( "TrackListMerger",
 process.hltHighPtTkMu50TkFilt = cms.EDFilter( "HLTTrackWithHits",
     saveTags = cms.bool( True ),
     src = cms.InputTag( "hltIter2HighPtTkMuMerged" ),
-    MinPT = cms.double( 50.0 ),
+    MinPT = cms.double( 10.0 ),
     MinN = cms.int32( 1 ),
     MinPXL = cms.int32( 1 ),
     MinBPX = cms.int32( 0 ),
@@ -12263,7 +12260,7 @@ process.HLTIterativeTrackingIter023ForIterL3FromL1Muon = cms.Sequence( process.H
 process.HLTIterL3IOmuonFromL1TkCandidateSequence = cms.Sequence( process.HLTRecopixelvertexingSequenceForIterL3FromL1Muon + process.HLTIterativeTrackingIter023ForIterL3FromL1Muon )
 process.HLTIterL3muonTkCandidateSequence = cms.Sequence( process.HLTDoLocalPixelSequence + process.HLTDoLocalStripSequence + process.HLTIterL3OIAndIOFromL2muonTkCandidateSequence + process.hltL1MuonsPt0 + process.HLTIterL3IOmuonFromL1TkCandidateSequence )
 process.HLTL3muonrecoNocandSequence = cms.Sequence( process.HLTIterL3muonTkCandidateSequence + process.hltIterL3MuonMerged + process.hltIterL3MuonAndMuonFromL1Merged + process.hltIterL3GlbMuon + process.hltIterL3MuonsNoID + process.hltIterL3Muons + process.hltL3MuonsIterL3Links + process.hltIterL3MuonTracks )
-process.HLTL3muonrecoSequence = cms.Sequence( process.HLTL3muonrecoNocandSequence + process.hltIterL3MuonCandidatesNoID + process.hltIterL3MuonCandidates )
+process.HLTL3muonrecoSequence = cms.Sequence( process.HLTL3muonrecoNocandSequence + process.hltIterL3MuonCandidates )
 process.HLTDoFullUnpackingEgammaEcalMFSequence = cms.Sequence( process.hltEcalDigis + process.hltEcalPreshowerDigis + process.hltEcalUncalibRecHit + process.hltEcalDetIdToBeRecovered + process.hltEcalRecHit + process.hltEcalPreshowerRecHit )
 process.HLTDoLocalHcalSequence = cms.Sequence( process.hltHcalDigis + process.hltHbhePhase1Reco + process.hltHbhereco + process.hltHfprereco + process.hltHfreco + process.hltHoreco )
 process.HLTPFClusteringEcalMFForMuons = cms.Sequence( process.hltRecHitInRegionForMuonsMF + process.hltRecHitInRegionForMuonsES + process.hltParticleFlowRecHitECALForMuonsMF + process.hltParticleFlowRecHitPSForMuons + process.hltParticleFlowClusterECALUncorrectedForMuonsMF + process.hltParticleFlowClusterPSForMuons + process.hltParticleFlowClusterECALForMuonsMF )
@@ -12304,7 +12301,7 @@ process.HLTSchedule = cms.Schedule( *(process.HLTriggerFirstPath, process.HLT_Is
 
 process.source = cms.Source( "PoolSource",
     fileNames = cms.untracked.vstring(
-        '/store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/00000/EF00BD86-2DB3-3645-8521-A3F29E89440D.root',
+        'file:/afs/cern.ch/user/k/kplee/work/public/ROOTFile_Test/RAW_SingleMuon_Run2018A_Run316361.root',
     ),
     inputCommands = cms.untracked.vstring(
         'keep *'
@@ -12327,6 +12324,13 @@ process.options = cms.untracked.PSet(
     numberOfStreams = cms.untracked.uint32( 0 ),
     sizeOfStackForThreadsInKB = cms.untracked.uint32( 10*1024 )
 )
+# load the DQMStore and DQMRootOutputModule
+#process.load( "DQMServices.Core.DQMStore_cfi" )
+#process.DQMStore.enableMultiThread = True
+
+#process.dqmOutput = cms.OutputModule("DQMRootOutputModule",
+#    fileName = cms.untracked.string("DQMIO.root")
+#)
 
 # override the GlobalTag, connection string and pfnPrefix
 if 'GlobalTag' in process.__dict__:
@@ -12340,7 +12344,6 @@ if 'MessageLogger' in process.__dict__:
     process.MessageLogger.categories.append('HLTrigReport')
     process.MessageLogger.categories.append('FastReport')
 
-# load the DQMStore and DQMRootOutputModule
 # add specific customizations
 _customInfo = {}
 _customInfo['menuType'  ]= "GRun"
@@ -12350,9 +12353,9 @@ _customInfo['globalTags'][False] = "auto:run2_mc_GRun"
 _customInfo['inputFiles']={}
 _customInfo['inputFiles'][True]  = "file:RelVal_Raw_GRun_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_GRun_MC.root"
-_customInfo['maxEvents' ]=  100
+_customInfo['maxEvents' ]=  -1
 _customInfo['globalTag' ]= "102X_upgrade2018_realistic_v15"
-_customInfo['inputFile' ]=  ['/store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/90003/F42845F0-E07B-7F43-BA78-F6FCBBCF61FC.root']
+_customInfo['inputFile' ]=  ['/store/data/Run2018D/SingleMuon/RAW/v1/000/325/172/00000/DB2CBB52-6FB4-8541-9FC2-FB0F89979A3C.root']
 _customInfo['realData'  ]=  False
 from HLTrigger.Configuration.customizeHLTforALL import customizeHLTforAll
 process = customizeHLTforAll(process,"GRun",_customInfo)
@@ -12368,64 +12371,53 @@ modifyHLTforEras(process)
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 200
 
-
-'''process.source = cms.Source( "PoolSource",
-
- fileNames = cms.untracked.vstring('/store/mc/RunIIFall18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU0to70_102X_upgrade2018_realistic_v11-v1/110008/D889B4ED-CDE8-7346-B041-A9A940F88155.root'),
-
-  secondaryFileNames=cms.untracked.vstring(
-  '/store/mc/RunIIFall18wmLHEGS/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM/102X_upgrade2018_realistic_v11-v1/110002/DC181D03-3D36-834E-BFC1-B43A9B0D8D4D.root',
-'/store/mc/RunIIFall18wmLHEGS/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM/102X_upgrade2018_realistic_v11-v1/110002/E1ABA16C-A87E-8247-984C-49CB38FF1ABC.root'
-
-)
-)'''
-
-
 process.source = cms.Source( "PoolSource",
 
- fileNames = cms.untracked.vstring('/store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/AODSIM/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/00001/5BA3BD2D-737C-3B44-9542-6A4ABBB2D54F.root'),
- secondaryFileNames=cms.untracked.vstring(
- '/store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/00007/2F6991D5-CDF8-A24D-90DD-3A75513B8C81.root',
-'/store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/00007/5CA35348-D0F6-BE4E-85D4-F491AD29BBA6.root',
-'/store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/00007/97CB8827-CFC7-6742-AFEE-4F8916101B98.root',
-'/store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/00007/BBCF3E87-29B7-F04C-B3FA-5CD9045F9E5E.root',
-'/store/mc/RunIIAutumn18DR/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/FlatPU28to62NZS_102X_upgrade2018_realistic_v15-v1/00007/C88F167E-E62B-854B-BBBB-7CF1040D20C5.root' 
-)
+ fileNames = cms.untracked.vstring('/store/mc/RunIISpring18DR/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/AODSIM/NZSPU40to70_100X_upgrade2018_realistic_v10-v1/70000/FCEEA597-052E-E811-9EC4-A4BF0102A4F5.root'),
 
+  secondaryFileNames=cms.untracked.vstring(
+'/store/mc/RunIISpring18DR/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/NZSPU40to70_100X_upgrade2018_realistic_v10-v1/70000/9A286A2C-B22D-E811-8C30-EC0D9A0B33B0.root',
+'/store/mc/RunIISpring18DR/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/NZSPU40to70_100X_upgrade2018_realistic_v10-v1/70000/6C144337-AC2D-E811-A4AE-EC0D9A0B3340.root',
+'/store/mc/RunIISpring18DR/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/NZSPU40to70_100X_upgrade2018_realistic_v10-v1/70000/481D2D75-902D-E811-ADEF-90B11C094A7E.root',
+'/store/mc/RunIISpring18DR/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/NZSPU40to70_100X_upgrade2018_realistic_v10-v1/70000/3AA7DF53-9C2D-E811-8A23-001E675A69DC.root',
+'/store/mc/RunIISpring18DR/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/NZSPU40to70_100X_upgrade2018_realistic_v10-v1/70000/149F41B4-AD2D-E811-AC95-001E67A3F92F.root',
+'/store/mc/RunIISpring18DR/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/NZSPU40to70_100X_upgrade2018_realistic_v10-v1/70000/5CE579C9-A42D-E811-B591-EC0D9A0B31B0.root',
+'/store/mc/RunIISpring18DR/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/GEN-SIM-RAW/NZSPU40to70_100X_upgrade2018_realistic_v10-v1/70000/4A356514-A92D-E811-A515-001517FB1D0C.root'
+)
 )
 
 
 
 from RecoMuon.TrackingTools.MuonServiceProxy_cff import *
 
-
 process.muonNtuples = cms.EDAnalyzer("MuonNtuples",
                    MuonServiceProxy,
                    offlineVtx               = cms.InputTag("offlinePrimaryVertices"),
                    offlineMuons             = cms.InputTag("muons"),
-                   triggerResult            = cms.untracked.InputTag("TriggerResults::MYHLT"),
-                   triggerSummary           = cms.untracked.InputTag("hltTriggerSummaryAOD::MYHLT"),
+                   triggerResult            = cms.untracked.InputTag("TriggerResults::TEST"),
+                   triggerSummary           = cms.untracked.InputTag("hltTriggerSummaryAOD::TEST"),
                    tagTriggerResult         = cms.untracked.InputTag("TriggerResults::HLT"),
                    tagTriggerSummary        = cms.untracked.InputTag("hltTriggerSummaryAOD::HLT"),
                    triggerProcess   = cms.string("TEST"),
-                   L3Candidates             = cms.untracked.InputTag("hltIterL3MuonCandidates"),
-                   L3CandidatesNoID         = cms.untracked.InputTag("hltIterL3MuonCandidatesNoID"),
+                   L3Candidates             = cms.untracked.InputTag("hltOldL3MuonCandidates"),
                    L2Candidates             = cms.untracked.InputTag("hltL2MuonCandidates"),
                    L1Candidates             = cms.untracked.InputTag('hltGtStage2Digis','Muon'),
-                   TkMuCandidates           = cms.untracked.InputTag("hltIterL3OIL3MuonCandidates"),
-                   L3OIMuCandidates         = cms.untracked.InputTag("hltIterL3OIL3MuonCandidates"),
-                   L3IOMuCandidates         = cms.untracked.InputTag("hltIterL3IOFromL2MuonCandidates"),
+                   L3CandidatesNoID         = cms.untracked.InputTag("hltOldL3MuonCandidates"),
+		   TkMuCandidates           = cms.untracked.InputTag("hltHighPtTkMuonCands"),
+                   L3OIMuCandidates         = cms.untracked.InputTag("hltHighPtTkMuonCands"),
+                   L3IOMuCandidates         = cms.untracked.InputTag("hltHighPtTkMuonCands"),
                    MuonLinksTag = cms.untracked.InputTag("hltIterL3MuonsFromL2LinksCombination"),
                    globalMuons = cms.InputTag("globalMuons"),
-                   theTrackOI               = cms.untracked.InputTag("hltIterL3OIMuonTrackSelectionHighPurity"),
-                   theTrackIOL2             = cms.untracked.InputTag("hltIter3IterL3MuonMerged"),
-                   theTrackIOL1             = cms.untracked.InputTag("hltIter3IterL3FromL1MuonMerged"),
+                   theTrackOI               = cms.untracked.InputTag("hltL3TkTracksMergeStep1"),
+                   theTrackIOL2             = cms.untracked.InputTag("hltL3TkTracksFromL2IOHit"),
+                   theTrackIOL1             = cms.untracked.InputTag("hltIter2HighPtTkMuMerged"),
                    l3filterLabel    = cms.string("hltL3fL1sMu22Or25L1f0L2f10QL3Filtered27Q"),
                    lumiScalerTag            = cms.untracked.InputTag("scalersRawToDigi"),
                    puInfoTag                = cms.untracked.InputTag("addPileupInfo"),
                    genParticlesTag          = cms.untracked.InputTag("genParticles"),
                    doOffline                = cms.untracked.bool(True)
 )
+
 
 
 
@@ -12440,6 +12432,8 @@ process.HLTValidation = cms.EndPath(
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(False) )
 process.options.allowUnscheduled = cms.untracked.bool(True)
 
+process.hltHcalDigis.saveQIE10DataNSamples = cms.untracked.vint32( 6) 
+process.hltHcalDigis.saveQIE10DataTags = cms.untracked.vstring( "MYDATA" )
 
 
 
