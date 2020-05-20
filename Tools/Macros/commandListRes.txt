@@ -1,0 +1,44 @@
+CascadeTkMu 2018:
+
+Data:
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muHLTPaper_CascadeTkMu2018_RAWRECO/SingleMuon/muHLTPaper_CascadeTkMu2018_RAWRECO/191015_055855/0000/muonNtuple_*.root","ptRes_CTk_2018_Data_p1" )
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muHLTPaper_CascadeTkMu2018_RAWRECO/SingleMuon/muHLTPaper_CascadeTkMu2018_RAWRECO/191015_055855/0001/muonNtuple_*.root","ptRes_CTk_2018_Data_p2" )
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muHLTPaper_CascadeTkMu2018_RAWRECO/SingleMuon/muHLTPaper_CascadeTkMu2018_RAWRECO/191015_055855/0002/muonNtuple_*.root","ptRes_CTk_2018_Data_p3" )
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muHLTPaper_CascadeTkMu2018_RAWRECO/SingleMuon/muHLTPaper_CascadeTkMu2018_RAWRECO/191015_055855/0003/muonNtuple_*.root","ptRes_CTk_2018_Data_p4" )
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muHLTPaper_CascadeTkMu2018_RAWRECO/SingleMuon/muHLTPaper_CascadeTkMu2018_RAWRECO/191015_055855/0004/muonNtuple_*.root","ptRes_CTk_2018_Data_p5" )
+
+MC:
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Fall102XFlat_CascadeTkMu_v5/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Fall102XFlat_CascadeTkMu_v5/191008_165758/0000/muonNtuple_*.root","ptRes_CTk_2018_MC_p1" )
+
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Fall102XFlat_CascadeTkMu_v5/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Fall102XFlat_CascadeTkMu_v5/191008_165758/0001/muonNtuple_*.root","ptRes_CTk_2018_MC_p2" )
+
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Fall102XFlat_CascadeTkMu_v5/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Fall102XFlat_CascadeTkMu_v5/191008_165758/0002/muonNtuple_*.root","ptRes_CTk_2018_MC_p3" )
+
+
+CascadeTkMu 2016:
+
+Data:
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muHLTPaper_SingleMu_PromptReco2016H_RAWRECO_v2/SingleMuon/muHLTPaper_SingleMu_PromptReco2016H_RAWRECO_v2/191015_190950/0000/muonNtuple_*.root","ptRes_CTk_2016_Data" )
+
+MC:
+.x pTResolutionCTk.C( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Summer80XFlat_v7/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Summer80XFlat_v7//191025_010653/0000/muonNtuple_*.root","ptRes_CTk_2016_MC" )
+
+IterL3:
+
+2018 Data:
+
+.x pTResolution.C ( "root://cmseos.fnal.gov//store/user/jschulte/muHLTPaper_IterL32018_RAWRECO_NoIDv3/SingleMuon/muHLTPaper_IterL32018_RAWRECO_NoIDv3/200212_225611/0000/muonNtuple_*.root","ptRes_IterL3_2018_Data")
+.x pTResolutionNoID.C ( "root://cmseos.fnal.gov//store/user/jschulte/muHLTPaper_IterL32018_RAWRECO_NoIDv3/SingleMuon/muHLTPaper_IterL32018_RAWRECO_NoIDv3/200212_225611/0000/muonNtuple_*.root","ptRes_IterL3NoID_2018_Data" )
+
+
+
+2018 MC: 
+
+.x pTResolution.C ( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Fall102XFlat_NoID/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Fall102XFlat_NoID/200213_223138/0000/muonNtuple_*.root","ptRes_IterL3_2018_MC_p1" )
+.x pTResolution.C ( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Fall102XFlat_NoID/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Fall102XFlat_NoID/200213_223138/0001/muonNtuple_*.root","ptRes_IterL3_2018_MC_p2" )
+.x pTResolution.C ( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Fall102XFlat_NoID/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Fall102XFlat_NoID/200213_223138/0002/muonNtuple_*.root","ptRes_IterL3_2018_MC_p3" )
+
+.x pTResolutionNoID.C ( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Fall102XFlat_NoID/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Fall102XFlat_NoID/200213_223138/0000/muonNtuple_*.root","ptRes_IterL3NoID_2018_MC_p1" )
+.x pTResolutionNoID.C ( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Fall102XFlat_NoID/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Fall102XFlat_NoID/200213_223138/0001/muonNtuple_*.root","ptRes_IterL3NoID_2018_MC_p2" )
+.x pTResolutionNoID.C ( "root://cmseos.fnal.gov//store/user/jschulte/muonHLTpaper_DYJets_Fall102XFlat_NoID/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/muonHLTpaper_DYJets_Fall102XFlat_NoID/200213_223138/0002/muonNtuple_*.root","ptRes_IterL3NoID_2018_MC_p3" )
+

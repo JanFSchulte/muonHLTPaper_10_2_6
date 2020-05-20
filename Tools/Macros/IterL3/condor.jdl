@@ -1,0 +1,25 @@
+
+universe = vanilla
+Executable = runInterpretation.sh
+Should_Transfer_Files = YES
+whenToTransferOutput = ON_EXIT
+Transfer_Input_Files = runInterpretation.sh
+Output = zPrimeCombine_$(Cluster)_$(Process).stdout
+Error = zPrimeCombine_$(Cluster)_$(Process).stderr
+Log = zPrimeCombine_$(Cluster)_$(Process).log
+x509userproxy = $ENV(X509_USER_PROXY)
+Arguments = -1 10 6
+Queue 1
+Arguments = -1 16 6
+Queue 1
+Arguments = -1 22 6
+Queue 1
+Arguments = -1 28 6
+Queue 1
+Arguments = -1 34 6
+Queue 1
+Arguments = -1 40 6
+Queue 1
+Arguments = -1 46 6
+Queue 1
+

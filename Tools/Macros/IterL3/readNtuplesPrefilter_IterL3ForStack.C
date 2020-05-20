@@ -33,7 +33,7 @@ bool firedL1        (          std::vector<HLTObjCand>, std::string);
 //bool matchMuonWithL3(MuonCand, std::vector<HLTMuonCand>);
 bool  matchMuonWithL3 (MuonCand, std::vector<HltTrackCand>);
 
-std::string getProbeFilter(int);
+std::string getProbeFilter(int,bool);
 float getLeadingPtCut(int);
 float getTrailingPtCut(int);
 
@@ -45,26 +45,150 @@ double eta_bins[16] = {-2.4, -2.1, -1.6, -1.2, -1.04, -0.9, -0.3, -0.2,  0.2, 0.
 double iso_bins[12] = { 0  , 0.02, 0.04, 0.06, 0.08,  0.1, 0.12, 0.16, 0.2, 0.3, 0.6, 1   };
 double offlineIsoCut = 0.15;
 
-
+double weights[120] = {
+0,
+0,
+0,
+0,
+0,
+0,
+3962.58,
+1922.78,
+770.845,
+499.675,
+210.538,
+117.538,
+63.4768,
+37.1985,
+23.0937,
+14.7195,
+10.3597,
+7.20071,
+5.35578,
+4.11288,
+3.27684,
+2.64972,
+2.23488,
+1.9275,
+1.69965,
+1.51698,
+1.36991,
+1.26135,
+1.16694,
+1.08709,
+1.01763,
+0.938948,
+0.877911,
+0.811432,
+0.747691,
+0.685075,
+0.627142,
+0.570469,
+0.516718,
+0.4713,
+0.427329,
+0.387521,
+0.350465,
+0.319454,
+0.290395,
+0.266889,
+0.248097,
+0.233828,
+0.219835,
+0.20588,
+0.197742,
+0.191238,
+0.183904,
+0.175513,
+0.175626,
+0.177029,
+0.174181,
+0.172184,
+0.175612,
+0.182704,
+0.182884,
+0.178116,
+0.188324,
+0.198227,
+0.192363,
+0.197881,
+0.212715,
+0.212715,
+0.217636,
+0.214742,
+0.239151,
+0.228956,
+0.216051,
+0.266567,
+0.296731,
+0.281813,
+0.265021,
+0.270535,
+0.315188,
+0.292378,
+0.260119,
+0.330573,
+0.355631,
+0.335217,
+0.3565,
+0.418806,
+0.380833,
+0.296492,
+0.607797,
+0.40312,
+0.437765,
+0.433877,
+0.672169,
+0.320663,
+0.655824,
+0.669958,
+0.893277,
+0.409419,
+0.527845,
+0.691569,
+0.571697,
+1.33992,
+0.638055,
+0.466057,
+0.687136,
+1.19104,
+0.198506,
+1.19104,
+2.97759,
+0.297759,
+1.78655,
+0.595518,
+1.78655,
+0,
+0,
+0,
+0,
+0,
+0,
+0};
 /// TAG-DEFINITION: 
 std::string isofilterTag  = "hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07::HLT";
 
 /// for PROMPT-MUONS   (close-by and far-away) 
-std::string L1filter      = "hltL1fL1sMu22or25L1Filtered0::TEST"; 
-std::string L2filter      = "hltL2fL1sMu22or25L1f0L2Filtered10Q::TEST";
-std::string L3filter      = "hltL3fL1sMu22Or25L1f0L2f10QL3Filtered27Q::TEST"; 
+//std::string L1filter      = "hltL1fL1sMu22or25L1Filtered0::TEST"; 
+//std::string L2filter      = "hltL2fL1sMu22or25L1f0L2Filtered10Q::TEST";
+//std::string L3filter      = "hltL3fL1sMu22Or25L1f0L2f10QL3Filtered27Q::TEST"; 
+std::string L1filter      = "hltL1fL1sMu22or25L1Filtered0::MYHLT";
+std::string L2filter      = "hltL2fL1sMu22or25L1f0L2Filtered10Q::MYHLT";
+std::string L3filter      = "hltL3fL1sMu22Or25L1f0L2f10QL3Filtered27Q::MYHLT"; 
+
 
 // ******************************************
 //       T&P definitions                    *
 //                                          *
 std::string thepassfilter  = L3filter;
 //std::string theprobefilter = L1filter; 
-float offlinePtCut         = 26.;
+float offlinePtCut         = 24.;
 //                                          *
 //                                          *
 // ******************************************
 
-void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store/user/bmahakud/ProductionHLTAN_LPC_IterL3HighStat/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/ProductionHLTAN_LPC_IterL3HighStat/181130_193653/0000/muonNtupleIterL3.root", std::string effmeasured="MC2018"){
+void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store/user/bmahakud/ProductionHLTAN_LPC_IterL3HighStat/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/ProductionHLTAN_LPC_IterL3HighStat/181130_193653/0000/muonNtupleIterL3.root", std::string effmeasured="MC2018",bool isMC=false){
 
   int flavor=Sig::Prompt;
 
@@ -75,6 +199,7 @@ void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store
 
   TH1F* dimuon_mass             = new TH1F("h_dimuon_mass"          ,"dimuon_mass"      , 1500,  0,  150 );
   TH1F* tagiso                  = new TH1F("h_tagiso"               ,"tagiso"           ,  100,  0,  1   );  
+  TH1F* ProbePt                 = new TH1F("h_ProbePt"              ,"ProbeMuonPt"      ,10000,  0,  1000   );  
 
   TH1F* OIeffPt=new TH1F("OIeffPt","OIeffPt",19,  pt_bins);
   TH1F* OIeffEta=new TH1F("OIeffEta","OIeffEta",15, eta_bins); 
@@ -119,6 +244,23 @@ void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store
   OIplusIOL2plusIOL1effPhi->Sumw2();
   OIplusIOL2plusIOL1effnVtx->Sumw2();
 
+
+  TEfficiency* OIPt    = new TEfficiency("OIPt"   ,"OIPt"    ,   19,  pt_bins );
+  TEfficiency* OIIOPt    = new TEfficiency("OIIOPt"   ,"OIIOPt"    ,   19,  pt_bins );
+  TEfficiency* OIIOIOPt    = new TEfficiency("OIIOIOPt"   ,"OIIOIOPt"    ,   19,  pt_bins );
+
+  TEfficiency* OIEta          = new TEfficiency("OIEta"         ,"OIEta"          ,   15, eta_bins );
+  TEfficiency* OIIOEta          = new TEfficiency("OIIOEta"         ,"OIIOEta"          ,   15, eta_bins );
+  TEfficiency* OIIOIOEta          = new TEfficiency("OIIOIOEta"         ,"OIIOIOEta"          ,   15, eta_bins );
+
+  TEfficiency* OIPhi          = new TEfficiency("OIPhi"         ,"OIPhi"          ,   20, -3.2, 3.2);
+  TEfficiency* OIIOPhi          = new TEfficiency("OIIOPhi"         ,"OIIOPhi"          ,   20, -3.2, 3.2);
+  TEfficiency* OIIOIOPhi          = new TEfficiency("OIIOIOPhi"         ,"OIIOIOPhi"          ,   20, -3.2, 3.2);
+ 
+  TEfficiency* OInVtx          = new TEfficiency("OInVtx"         ,"OInVtx"          ,   50, 0, 100);
+  TEfficiency* OIIOnVtx          = new TEfficiency("OIIOnVtx"         ,"OIIOnVtx"          ,   50, 0, 100);
+  TEfficiency* OIIOIOnVtx          = new TEfficiency("OIIOIOnVtx"         ,"OIIOIOnVtx"          ,   50, 0, 100);
+
   double offlineiso04 = 100;
   
   TChain *tree = new TChain("muonNtuples/muonTree");
@@ -138,12 +280,12 @@ void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store
   tree-> SetBranchAddress("event",&ev,&evBranch);
 
 
-  //int nentries = tree->GetEntries();
-  int nentries = 10000000;// tree->GetEntries();
+  int nentries = tree->GetEntries();
+//  int nentries = 10000000;// tree->GetEntries();
   std::cout << "Number of entries = " << nentries << std::endl;
 
   bool flagfile = false;
-  std::string theprobefilter = getProbeFilter(flavor);
+  std::string theprobefilter = getProbeFilter(flavor,isMC);
   offlinePtCut = getLeadingPtCut(flavor);
   float ptcut1 = getLeadingPtCut(flavor);
   float ptcut2 = getTrailingPtCut(flavor);
@@ -151,32 +293,41 @@ void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store
   for (Int_t eventNo=0; eventNo < nentries; eventNo++)     {
     Int_t IgetEvent   = tree   -> GetEvent(eventNo);
     printProgBar((int)(eventNo*100./nentries));
-    
+ 
+
+    double weight = 1;
+    if (isMC) weight = weights[ev -> nVtx];
+   
     unsigned int nmuons = ev->muons.size(); 
     if (nmuons < 2) continue; 
     for (int imu = 0; imu < nmuons; imu++){ 
       // select the tag muon        
       if (debug) cout <<"select Tag muon" << endl;
       if (! selectTagMuon(ev -> muons.at(imu), tagiso)) continue; 
-      
       if (! matchMuon(ev -> muons.at(imu), ev -> hltTag.objects, isofilterTag)) continue;
-      
       for (int jmu = 0; jmu < nmuons; jmu++){
 	bool passOI   = false;
 	bool passIOL2 = false;
         bool passIOL1 = false;
-
 	// select the probe muon  & match to the probe:  
 	if (!selectProbeMuon(ev -> muons.at(jmu), ev -> muons.at(imu), dimuon_mass)) continue;
-	if (!doingL1 && !(matchMuon(ev -> muons.at(jmu), ev -> hlt.objects, theprobefilter))) continue;	
-	
-	// select the pass muon
+	if (!(matchMuon(ev -> muons.at(jmu), ev -> hlt.objects, theprobefilter))) continue;
+		// select the pass muon
+		//
+	ProbePt->Fill(ev -> muons.at(jmu).pt);
 	if (matchMuonWithL3(ev->muons.at(jmu),ev->hltTrackOI)) passOI = true;
         if (matchMuonWithL3(ev->muons.at(jmu),ev->hltTrackIOL2)) passIOL2 = true;	
         if (matchMuonWithL3(ev->muons.at(jmu),ev->hltTrackIOL1)) passIOL1 = true;
-
-
-
+	if (isMC){
+		OIPt   -> FillWeighted( passOI, weight, ev -> muons.at(jmu).pt );
+		OIIOPt   -> FillWeighted( (passOI || passIOL2), weight, ev -> muons.at(jmu).pt );
+		OIIOIOPt   -> FillWeighted( (passOI || passIOL2 || passIOL1), weight, ev -> muons.at(jmu).pt );
+	}
+	else{
+		OIPt   -> Fill( passOI, ev -> muons.at(jmu).pt );
+		OIIOPt   -> Fill( (passOI || passIOL2), ev -> muons.at(jmu).pt );
+		OIIOIOPt   -> Fill( (passOI || passIOL2 || passIOL1), ev -> muons.at(jmu).pt );
+	}
          effPtTot->Fill(ev -> muons.at(jmu).pt);	
 
          if(passOI)OIeffPt->Fill(ev -> muons.at(jmu).pt);
@@ -184,6 +335,35 @@ void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store
 	 if(passOI || passIOL2 || passIOL1)OIplusIOL2plusIOL1effPt->Fill(ev -> muons.at(jmu).pt);
 
 	 if (ev -> muons.at(jmu).pt < offlinePtCut) continue;
+
+	if (isMC){
+		OIEta  -> FillWeighted( passOI, weight, ev -> muons.at(jmu).eta);
+		OIPhi  -> FillWeighted( passOI, weight, ev -> muons.at(jmu).phi);
+		OInVtx -> FillWeighted( passOI, weight, ev -> nVtx             );
+
+		OIIOEta  -> FillWeighted( (passOI || passIOL2), weight, ev -> muons.at(jmu).eta);
+		OIIOPhi  -> FillWeighted( (passOI || passIOL2), weight, ev -> muons.at(jmu).phi);
+		OIIOnVtx -> FillWeighted( (passOI || passIOL2), weight, ev -> nVtx             );
+
+		OIIOIOEta  -> FillWeighted( (passOI || passIOL2 || passIOL1), weight, ev -> muons.at(jmu).eta);
+		OIIOIOPhi  -> FillWeighted( (passOI || passIOL2 || passIOL1), weight, ev -> muons.at(jmu).phi);
+		OIIOIOnVtx -> FillWeighted( (passOI || passIOL2 || passIOL1), weight, ev -> nVtx             );
+	}
+	else{
+		OIEta  -> Fill( passOI, ev -> muons.at(jmu).eta);
+		OIPhi  -> Fill( passOI, ev -> muons.at(jmu).phi);
+		OInVtx -> Fill( passOI, ev -> nVtx             );
+
+		OIIOEta  -> Fill( (passOI || passIOL2), ev -> muons.at(jmu).eta);
+		OIIOPhi  -> Fill( (passOI || passIOL2), ev -> muons.at(jmu).phi);
+		OIIOnVtx -> Fill( (passOI || passIOL2), ev -> nVtx             );
+
+		OIIOIOEta  -> Fill( (passOI || passIOL2 || passIOL1), ev -> muons.at(jmu).eta);
+		OIIOIOPhi  -> Fill( (passOI || passIOL2 || passIOL1), ev -> muons.at(jmu).phi);
+		OIIOIOnVtx -> Fill( (passOI || passIOL2 || passIOL1), ev -> nVtx             );
+	}
+
+
          effEtaTot->Fill(ev -> muons.at(jmu).eta);
          effPhiTot->Fill(ev -> muons.at(jmu).phi);
          effnVtxTot->Fill(ev ->nVtx);
@@ -244,9 +424,23 @@ void readNtuplesPrefilter_IterL3ForStack(TString inputfilename="/eos/uscms/store
   
 
 
+  OIPt->Write();
+  OIIOPt->Write();
+  OIIOIOPt->Write();
 
+  OIEta->Write();
+  OIIOEta->Write();
+  OIIOIOEta->Write();
 
+  OIPhi->Write();
+  OIIOPhi->Write();
+  OIIOIOPhi->Write();
 
+  OInVtx->Write();
+  OIIOnVtx->Write();
+  OIIOIOnVtx->Write();
+
+  ProbePt->Write();
 
  
   return;
@@ -263,11 +457,11 @@ bool matchMuon(MuonCand mu, std::vector<HLTObjCand> toc, std::string tagFilterNa
   bool match = false;
   int ntoc = toc.size();
 
-  float minDR = 0.2; 
-  if (tagFilterName.find("L1fL1") != std::string::npos) minDR = 1.0;
+  float minDR = 0.1; 
+  if (tagFilterName.find("L1fL1") != std::string::npos) minDR = 0.3;
   float theDR = 100;
-  for ( std::vector<HLTObjCand>::const_iterator it = toc.begin(); it != toc.end(); ++it ) { 
-    if ( it->filterTag.compare(tagFilterName) == 0) { 
+  for ( std::vector<HLTObjCand>::const_iterator it = toc.begin(); it != toc.end(); ++it ) {
+    if ( it->filterTag.compare(tagFilterName) == 0) {
       theDR = deltaR(it -> eta, it -> phi, mu.eta, mu.phi);
       if (theDR < minDR){
         minDR = theDR;
@@ -281,7 +475,7 @@ bool matchMuon(MuonCand mu, std::vector<HLTObjCand> toc, std::string tagFilterNa
 
 bool selectTagMuon(MuonCand mu, TH1F* tagh){
   
-  if (!( mu.pt         > offlinePtCut)) return false; 
+  if (!( mu.pt         > 26.)) return false; 
   if (!( fabs(mu.eta)  < 2.4 )) return false; 
   if (!( mu.isTight    == 1  )) return false; 
   
@@ -296,7 +490,7 @@ bool selectTagMuon(MuonCand mu, TH1F* tagh){
 
 float getLeadingPtCut(int signature){ 
   float ptcut = 0.;
-  if (signature == Sig::Prompt) ptcut = 29.;
+  if (signature == Sig::Prompt) ptcut = 26.;
   if (signature == Sig::DiMuon) ptcut = 18.;
   if (signature == Sig::LowPt ) ptcut = 0.;
   return ptcut;
@@ -304,7 +498,7 @@ float getLeadingPtCut(int signature){
 
 float getTrailingPtCut(int signature){ 
   float ptcut = 0.;
-  if (signature == Sig::Prompt) ptcut = 27.;
+  if (signature == Sig::Prompt) ptcut = 24.;
   if (signature == Sig::DiMuon) ptcut = 8. ;
   if (signature == Sig::LowPt ) ptcut = 0. ;
   return ptcut;
@@ -332,6 +526,7 @@ bool selectProbeMuon(MuonCand mu, MuonCand tagMu, TH1F* dimuon_mass){
       mu.eta == tagMu.eta &&
       mu.phi == tagMu.phi ) 
     return false;
+  if ( deltaR(tagMu.eta,tagMu.phi, mu.eta, mu.phi) <= 0.3 ) return false;
   
   if (!( mu.pt          > 0  )) return false; 
   if (!( fabs(mu.eta)  < 2.4 )) return false; 
@@ -355,7 +550,7 @@ bool selectProbeMuon(MuonCand mu, MuonCand tagMu, TH1F* dimuon_mass){
 bool matchMuonWithL3(MuonCand mu, std::vector<HltTrackCand> L3cands){
 
   bool match = false;
-  float minDR = 0.1;
+  float minDR = 0.3;
   float theDR = 100;
   for ( std::vector<HltTrackCand>::const_iterator it = L3cands.begin(); it != L3cands.end(); ++it ) {
     theDR = deltaR(it -> eta, it -> phi, mu.eta, mu.phi);
@@ -370,9 +565,10 @@ bool matchMuonWithL3(MuonCand mu, std::vector<HltTrackCand> L3cands){
 
 
 
-std::string getProbeFilter(int signature){
+std::string getProbeFilter(int signature,bool isMC){
   if (signature == Sig::Prompt) { 
-    return "hltL1fL1sMu22or25L1Filtered0::TEST"; //Prompt
+    if (isMC) return "hltL1fL1sMu22or25L1Filtered0::MYHLT"; //Prompt
+    else return "hltL1fL1sMu22or25L1Filtered0::TEST"; //Prompt
   }
   if (signature == Sig::DiMuon) { 
     return "hltL1fL1sDoubleMu155L1Filtered0::TEST"; //Dimuon
@@ -404,3 +600,6 @@ void printProgBar( int percent ){
   std::cout.width( 3 );
   std::cout<< percent << "%     " << std::flush;
 }
+
+
+

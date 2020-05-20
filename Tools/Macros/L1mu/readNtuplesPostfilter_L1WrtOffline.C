@@ -31,7 +31,7 @@ bool selectGenMuon  (GenParticleCand);
 bool matchMuon      (MuonCand, std::vector<HLTObjCand>, std::string);
 bool firedL1        (          std::vector<HLTObjCand>, std::string);
 bool matchMuonWithL3(MuonCand, std::vector<HLTMuonCand>);
-bool matchMuonWithL1(MuonCand, std::vector<L1MuonCand>);
+bool matchMuonWithL1(MuonCand, std::vector<L1MuonCand>, bool);
 
 bool matchMuonWithL1Filter(MuonCand, std::vector<HLTObjCand>, std::string);
 
@@ -82,12 +82,12 @@ std::string L3filter      = "hltDoubleMu3L3FilteredNoVtx::TEST";
 //                                          *
 std::string thepassfilter  = L3filter;
 //std::string theprobefilter = L1filter; 
-float offlinePtCut         = 28.;
+float offlinePtCut         = 26.;
 //                                          *
 //                                          *
 // ******************************************
 
-void readNtuplesPostfilter_L1WrtOffline(TString inputfilename="/eos/uscms/store/user/bmahakud/ProductionHLTAN_LPC_IterL3HighStat/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/ProductionHLTAN_LPC_IterL3HighStat/181130_193653/0000/", std::string effmeasured="DYMC2018"){
+void readNtuplesPostfilter_L1WrtOffline(TString inputfilename="/eos/uscms/store/user/bmahakud/ProductionHLTAN_LPC_IterL3HighStat/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/ProductionHLTAN_LPC_IterL3HighStat/181130_193653/0000/", std::string effmeasured="DYMC2018", bool Q8 = false){
 
 
   int flavor=Sig::Prompt;
@@ -107,7 +107,7 @@ void readNtuplesPostfilter_L1WrtOffline(TString inputfilename="/eos/uscms/store/
   TEfficiency* muonPt_endcap    = new TEfficiency("muonPt_endcap"   ,"muonPt_endcap"    ,   19,  pt_bins );
   TEfficiency* muonPt           = new TEfficiency("muonPt"          ,"muonPt"           ,   19,  pt_bins ); 
   TEfficiency* muonPtTurnOn     = new TEfficiency("muonPtTurnOn"    ,"muonPtTurnOn"     ,   19,  pt_bins ); 
-  TEfficiency* muonEta          = new TEfficiency("muonEta"         ,"muonEta"          ,   14, -2.4,2.4 );
+  TEfficiency* muonEta          = new TEfficiency("muonEta"         ,"muonEta"          ,   15,  eta_bins );
   TEfficiency* muonPhi          = new TEfficiency("muonPhi"         ,"muonPhi"          ,   14, -3.2, 3.2);
   TEfficiency* muonEff          = new TEfficiency("muonEff"         ,"muonEff"          ,    1,   0., 1.0);
   TEfficiency* muonEffnVtx          = new TEfficiency("muonEffnVtx"         ,"muonEffnVtx"          ,    50,   0, 100);
@@ -130,6 +130,7 @@ void readNtuplesPostfilter_L1WrtOffline(TString inputfilename="/eos/uscms/store/
   TEfficiency* failingMuonPhi   = new TEfficiency("failingMuonPhi"  ,"failingMuonPhi"   ,   20, -3.2, 3.2);
   TEfficiency* failingMuonEff   = new TEfficiency("failingMuonEff"  ,"failingMuonEff"   ,   1 ,   0., 1.0);
 
+  TH1F* ProbePt                 = new TH1F("h_ProbePt"              ,"ProbeMuonPt"      ,10000, 0,1000  );
   TH1F* PassingProbePt          = new TH1F("h_PassingProbePt"       ,"PassingMuonPt"    ,  19,  pt_bins );
   TH1F* PassingProbeEta         = new TH1F("h_PassingProbeEta"      ,"PassingMuonEta"   ,  15, eta_bins );
   TH1F* PassingProbePhi         = new TH1F("h_PassingProbePhi"      ,"PassingMuonPhi"   ,  20, -3.2, 3.2);
@@ -179,7 +180,7 @@ void readNtuplesPostfilter_L1WrtOffline(TString inputfilename="/eos/uscms/store/
   tree-> SetBranchAddress("event",&ev,&evBranch);
 
 
-  int nentries = 500000;//tree->GetEntries();
+  int nentries = tree->GetEntries();
   std::cout << "Number of entries = " << nentries << std::endl;
 
   bool flagfile = false;
@@ -187,7 +188,8 @@ void readNtuplesPostfilter_L1WrtOffline(TString inputfilename="/eos/uscms/store/
   offlinePtCut = getLeadingPtCut(flavor);
   float ptcut1 = getLeadingPtCut(flavor);
   float ptcut2 = getTrailingPtCut(flavor);
-	
+  float probePtCut = 30.;
+  if (Q8) probePtCut = 30.;
   for (Int_t eventNo=0; eventNo < nentries; eventNo++)     {
     Int_t IgetEvent   = tree   -> GetEvent(eventNo);
     printProgBar((int)(eventNo*100./nentries));
@@ -200,7 +202,6 @@ void readNtuplesPostfilter_L1WrtOffline(TString inputfilename="/eos/uscms/store/
       if (debug) cout <<"select Tag muon" << endl;
       if (! selectTagMuon(ev -> muons.at(imu), tagiso)) continue; 
       
- 	std::cout << "found a probe" << std::endl;
       if (! matchMuon(ev -> muons.at(imu), ev -> hltTag.objects, isofilterTag)) continue;
       tagMuonPt -> Fill ( ev -> muons.at(imu).pt) ; 
       
@@ -210,12 +211,12 @@ void readNtuplesPostfilter_L1WrtOffline(TString inputfilename="/eos/uscms/store/
 	// select the probe muon  & match to the probe:  
 	if (!selectProbeMuon(ev -> muons.at(jmu), ev -> muons.at(imu), dimuon_mass)) continue;
 	//if (!doingL1 && !(matchMuon(ev -> muons.at(jmu), ev -> hlt.objects, theprobefilter))) continue;//this line is commented because we are measuring eff. of L1 wrt. offline	
- 	std::cout << "found a probe" << std::endl;
 	// select the pass muon
-	if (matchMuonWithL1(ev->muons.at(jmu),ev->L1muons)) pass = true;
+	if (matchMuonWithL1(ev->muons.at(jmu),ev->L1muons,Q8)) pass = true;
 	
-	muonPtTurnOn -> Fill( pass, ev -> muons.at(jmu).pt ); 
-	if (ev -> muons.at(jmu).pt < offlinePtCut) continue;
+	muonPtTurnOn -> Fill( pass, ev -> muons.at(jmu).pt );
+        ProbePt      -> Fill( ev -> muons.at(jmu).pt ); 
+	if (ev -> muons.at(jmu).pt < probePtCut) continue;
 	
 	TLorentzVector mu1, mu2;
 	mu1.SetPtEtaPhiM (ev->muons.at(imu).pt,ev->muons.at(imu).eta,ev->muons.at(imu).phi, muonmass); 
@@ -328,6 +329,7 @@ void readNtuplesPostfilter_L1WrtOffline(TString inputfilename="/eos/uscms/store/
   failingMuonPhi  -> Write();
   failingMuonEff  -> Write();
 
+  ProbePt  -> Write();
   PassingProbePt  -> Write();
   PassingProbeEta -> Write();
   PassingProbePhi -> Write();
@@ -389,7 +391,6 @@ bool matchMuon(MuonCand mu, std::vector<HLTObjCand> toc, std::string tagFilterNa
 }
 
 bool selectTagMuon(MuonCand mu, TH1F* tagh){
-  std::cout << "trying to select tag" << std::endl; 
   if (!( mu.pt         > offlinePtCut)) return false; 
   if (!( fabs(mu.eta)  < 2.4 )) return false; 
   if (!( mu.isTight    == 1  )) return false; 
@@ -405,7 +406,7 @@ bool selectTagMuon(MuonCand mu, TH1F* tagh){
 
 float getLeadingPtCut(int signature){ 
   float ptcut = 0.;
-  if (signature == Sig::Prompt) ptcut = 29.;
+  if (signature == Sig::Prompt) ptcut = 26.;
   if (signature == Sig::DiMuon) ptcut = 18.;
   if (signature == Sig::LowPt ) ptcut = 0.;
   return ptcut;
@@ -413,7 +414,7 @@ float getLeadingPtCut(int signature){
 
 float getTrailingPtCut(int signature){ 
   float ptcut = 0.;
-  if (signature == Sig::Prompt) ptcut = 27.;
+  if (signature == Sig::Prompt) ptcut = 24.;
   if (signature == Sig::DiMuon) ptcut = 8. ;
   if (signature == Sig::LowPt ) ptcut = 0. ;
   return ptcut;
@@ -441,7 +442,7 @@ bool selectProbeMuon(MuonCand mu, MuonCand tagMu, TH1F* dimuon_mass){
       mu.eta == tagMu.eta &&
       mu.phi == tagMu.phi ) 
     return false;
-  
+  if ( deltaR(tagMu.eta,tagMu.phi, mu.eta, mu.phi) <= 0.3 ) return false; 
   if (!( mu.pt          > 0  )) return false; 
   if (!( fabs(mu.eta)  < 2.4 )) return false; 
   if (!( mu.isTight    == 1  )) return false; 
@@ -476,18 +477,22 @@ bool matchMuonWithL3(MuonCand mu, std::vector<HLTMuonCand> L3cands){
   return match;
 }
 
-bool matchMuonWithL1(MuonCand mu, std::vector<L1MuonCand> L1cands){
+bool matchMuonWithL1(MuonCand mu, std::vector<L1MuonCand> L1cands, bool Q8){
 
   bool match = false;
   float minDR = 0.5;
   float theDR = 100;
+  int cut = 12;
+  float pTCut = 22.0;
+  if (Q8) cut = 8;
+  if (Q8) pTCut = 15;
   for ( std::vector<L1MuonCand>::const_iterator it = L1cands.begin(); it != L1cands.end(); ++it ) {
     theDR = deltaR(it -> eta, it -> phi, mu.eta, mu.phi);
 
     //if(it->pt <22.0)continue;
-    if(it->pt <15.0)continue;
+    if(it->pt <pTCut)continue;
     //if (theDR < minDR && it->quality >=12){
-    if (theDR < minDR && it->quality >=8){
+    if (theDR < minDR && it->quality >=cut){
       minDR = theDR;
       match = true;
     }

@@ -331,8 +331,8 @@ bool matchMuon(MuonCand mu, std::vector<HLTObjCand> toc, std::string tagFilterNa
   bool match = false;
   int ntoc = toc.size();
 
-  float minDR = 0.2; 
-  if (tagFilterName.find("L1fL1") != std::string::npos) minDR = 1.0;
+  float minDR = 0.1; 
+  if (tagFilterName.find("L1fL1") != std::string::npos) minDR = 0.3;
   float theDR = 100;
   for ( std::vector<HLTObjCand>::const_iterator it = toc.begin(); it != toc.end(); ++it ) { 
     if ( it->filterTag.compare(tagFilterName) == 0) { 
@@ -409,7 +409,7 @@ bool selectProbeMuon(MuonCand mu, MuonCand tagMu, TH1F* dimuon_mass){
   mu2.SetPtEtaPhiM (tagMu.pt, tagMu.eta, tagMu.phi, muonmass);
   double mumumass = (mu1 + mu2).M();
   dimuon_mass -> Fill(mumumass); 
-  if (! (mumumass > 86. && mumumass < 96. )) return false;
+  if (! (mumumass > 81. && mumumass < 101. )) return false;
   
   return true;
 }

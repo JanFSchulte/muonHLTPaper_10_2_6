@@ -8,8 +8,8 @@ TStyle *gStyle = new TStyle("gStyle","Style for P-TDR");
 SetStyle st;
 st.SetPars(gStyle);
 
-TFile *f1=new TFile("../2018Q12_PostFilter_L1EffwrtOffline.root","READ");
-TFile *f2=new TFile("../2018v2_PostFilter_L1EffwrtOffline.root","READ");
+TFile *f1=new TFile("../L1EffFullStats_PostFilter_L1EffwrtOffline.root","READ");
+TFile *f2=new TFile("../L1EffFullStatsQ8_PostFilter_L1EffwrtOffline.root","READ");
 
 
 //TFile *f1=new TFile("../PromptRecoA1_PostFilter_L1EffwrtOffline_L1Qua12_pt22.root","READ");
@@ -26,6 +26,15 @@ TEfficiency *Phi_v2=(TEfficiency*)f2->Get("muonPhi");
 
 TEfficiency *nVtx_v1=(TEfficiency*)f1->Get("muonEffnVtx");//muonEffnVtx
 TEfficiency *nVtx_v2=(TEfficiency*)f2->Get("muonEffnVtx");
+
+gStyle->SetTitleXSize(0.05); 
+gStyle->SetTitleYOffset(1.25); 
+gStyle->SetTitleXOffset(1.0); 
+gStyle->SetTitleYSize(0.05);
+gStyle->SetLabelColor(1, "XYZ");
+gStyle->SetLabelFont(42, "XYZ");
+gStyle->SetLabelOffset(0.005, "XYZ");
+gStyle->SetLabelSize(0.035, "XYZ");
 
 
 
@@ -157,8 +166,8 @@ graph1A->SetMinimum(0.8);
 graph1A->SetMaximum(1.1);
 graph1A->GetXaxis()->SetRangeUser(25,150.);
 graph1A->GetYaxis()->SetTitleSize(0.05); 
-graph1A->GetYaxis()->SetTitleOffset(1.3); 
-graph1A->GetXaxis()->SetTitleOffset(1.35); 
+graph1A->GetYaxis()->SetTitleOffset(1.25); 
+//graph1A->GetXaxis()->SetTitleOffset(1.35); 
 graph1A->GetXaxis()->SetTitleSize(0.05); 
 
 graph2A->SetMinimum(0.8);
@@ -166,7 +175,9 @@ graph2A->SetMaximum(1.1);
 graph2A->GetXaxis()->SetRangeUser(25,150.);
 gPad->Update();
 leg_1D[0]->Draw();
-latex->DrawLatex(0.95, 0.96, "2.5 fb^{-1} (2018) (13 TeV)");
+
+ gPad->RedrawAxis();
+latex->DrawLatex(0.95, 0.96, "5 fb^{-1} (2018) (13 TeV)");
 latexCMS->DrawLatex(0.15,0.955,"CMS");
 latexCMSExtra->DrawLatex(0.275,0.955,"Preliminary");
 
@@ -190,8 +201,8 @@ graph1B->SetMinimum(0.8);
 graph1B->SetMaximum(1.1);
 graph1B->GetXaxis()->SetRangeUser(-2.4,2.4);
 graph1B->GetYaxis()->SetTitleSize(0.05); 
-graph1B->GetYaxis()->SetTitleOffset(1.3); 
-graph1B->GetXaxis()->SetTitleOffset(1.35); 
+graph1B->GetYaxis()->SetTitleOffset(1.25); 
+//graph1B->GetXaxis()->SetTitleOffset(1.35); 
 graph1B->GetXaxis()->SetTitleSize(0.05); 
 
 graph2B->SetMinimum(0.8);
@@ -199,7 +210,8 @@ graph2B->SetMaximum(1.1);
 graph2B->GetXaxis()->SetRangeUser(-2.4,2.4);
 gPad->Update();
 leg_1D[1]->Draw();
-latex->DrawLatex(0.95, 0.96, "2.5 fb^{-1} (2018) (13 TeV)");
+ gPad->RedrawAxis();
+latex->DrawLatex(0.95, 0.96, "5 fb^{-1} (2018) (13 TeV)");
 latexCMS->DrawLatex(0.15,0.955,"CMS");
 latexCMSExtra->DrawLatex(0.275,0.955,"Preliminary");
 c2->SaveAs("Eta_L1EffwrtOffline.pdf");
@@ -217,8 +229,8 @@ graph1C->SetMinimum(0.8);
 graph1C->SetMaximum(1.1);
 graph1C->GetXaxis()->SetRangeUser(-3.14,3.14);
 graph1C->GetYaxis()->SetTitleSize(0.05); 
-graph1C->GetYaxis()->SetTitleOffset(1.3); 
-graph1C->GetXaxis()->SetTitleOffset(1.35); 
+graph1C->GetYaxis()->SetTitleOffset(1.25); 
+//graph1C->GetXaxis()->SetTitleOffset(1.35); 
 graph1C->GetXaxis()->SetTitleSize(0.05); 
 
 graph2C->SetMinimum(0.8);
@@ -226,7 +238,8 @@ graph2C->SetMaximum(1.1);
 graph2C->GetXaxis()->SetRangeUser(-3.14,3.14);
 gPad->Update();
 leg_1D[2]->Draw();
-latex->DrawLatex(0.95, 0.96, "2.5 fb^{-1} (2018) (13 TeV)");
+ gPad->RedrawAxis();
+latex->DrawLatex(0.95, 0.96, "5 fb^{-1} (2018) (13 TeV)");
 latexCMS->DrawLatex(0.15,0.955,"CMS");
 latexCMSExtra->DrawLatex(0.275,0.955,"Preliminary");
 c3->SaveAs("Phi_L1EffwrtOffline.pdf");
@@ -249,8 +262,8 @@ graph1D->SetMinimum(0.8);
 graph1D->SetMaximum(1.1);
 graph1D->GetXaxis()->SetRangeUser(0,60);
 graph1D->GetYaxis()->SetTitleSize(0.05); 
-graph1D->GetYaxis()->SetTitleOffset(1.3); 
-graph1D->GetXaxis()->SetTitleOffset(1.35); 
+graph1D->GetYaxis()->SetTitleOffset(1.25); 
+//graph1D->GetXaxis()->SetTitleOffset(1.35); 
 graph1D->GetXaxis()->SetTitleSize(0.05); 
 
 graph2D->SetMinimum(0.8);
@@ -258,7 +271,8 @@ graph2D->SetMaximum(1.1);
 graph2D->GetXaxis()->SetRangeUser(0,60);
 gPad->Update();
 leg_1D[3]->Draw();
-latex->DrawLatex(0.95, 0.96, "2.5 fb^{-1} (2018) (13 TeV)");
+ gPad->RedrawAxis();
+latex->DrawLatex(0.95, 0.96, "5 fb^{-1} (2018) (13 TeV)");
 latexCMS->DrawLatex(0.15,0.955,"CMS");
 latexCMSExtra->DrawLatex(0.275,0.955,"Preliminary");
 c4->SaveAs("nVtx_L1EffwrtOffline.pdf");
