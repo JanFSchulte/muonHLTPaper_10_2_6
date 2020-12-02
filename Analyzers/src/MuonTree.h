@@ -59,6 +59,8 @@ public:
   Float_t pt;  
   Float_t eta; 
   Float_t phi; 
+  Float_t propagatedEta; 
+  Float_t propagatedPhi; 
   Int_t   charge;    
 
   Int_t   isGlobal;
@@ -247,6 +249,12 @@ public:
   std::vector <HltTrackCand>    hltTrackOI;
   std::vector <HltTrackCand>    hltTrackIOL1;
   std::vector <HltTrackCand>    hltTrackIOL2;
+  std::vector <HltTrackCand>    hltTrackIOL1Iter0;
+  std::vector <HltTrackCand>    hltTrackIOL1Iter1;
+  std::vector <HltTrackCand>    hltTrackIOL1Iter2;
+  std::vector <HltTrackCand>    hltTrackIOL2Iter0;
+  std::vector <HltTrackCand>    hltTrackIOL2Iter1;
+  std::vector <HltTrackCand>    hltTrackIOL2Iter2;
 //**********************************************//
 
 

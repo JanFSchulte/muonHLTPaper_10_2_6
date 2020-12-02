@@ -12371,7 +12371,8 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 200
 
 process.source = cms.Source( "PoolSource",
 
- fileNames = cms.untracked.vstring('/store/data/Run2018D/SingleMuon/RAW-RECO/ZMu-PromptReco-v2/000/325/172/00000/FF018C80-477C-CA44-99F0-04F809E1BA0B.root'),
+ fileNames = cms.untracked.vstring(
+'/store/data/Run2018D/SingleMuon/RAW-RECO/ZMu-PromptReco-v2/000/325/172/00000/FF018C80-477C-CA44-99F0-04F809E1BA0B.root'),
 
 #  secondaryFileNames=cms.untracked.vstring(
 #'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/13A7C0D8-97DF-324A-8741-F9BA4BF0C3B8.root',
@@ -12381,17 +12382,22 @@ process.source = cms.Source( "PoolSource",
 #'/store/data/Run2018D/SingleMuon/RAW/v1/000/325/170/00000/CEC318AC-752B-474A-99AC-78F33856C9E8.root'
 
 
-#)
 )
+#)
 
+process.load("TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAny_cfi")
+process.load("TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi")
+process.load("TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorOpposite_cfi")
+#process.load("RecoMuon.DetLayers.muonDetLayerGeometry_cfi")
 
 
 from RecoMuon.TrackingTools.MuonServiceProxy_cff import *
 
-
+from math import pi
 process.muonNtuples = cms.EDAnalyzer("MuonNtuples",
                    MuonServiceProxy,
                    offlineVtx               = cms.InputTag("offlinePrimaryVertices"),
+                  # offlineMuons             = cms.InputTag("patMuons"),
                    offlineMuons             = cms.InputTag("muons"),
                    triggerResult            = cms.untracked.InputTag("TriggerResults::TEST"),
                    triggerSummary           = cms.untracked.InputTag("hltTriggerSummaryAOD::TEST"),
@@ -12410,20 +12416,56 @@ process.muonNtuples = cms.EDAnalyzer("MuonNtuples",
                    theTrackOI               = cms.untracked.InputTag("hltIterL3OIMuonTrackSelectionHighPurity"),
                    theTrackIOL2             = cms.untracked.InputTag("hltIter3IterL3MuonMerged"),
                    theTrackIOL1             = cms.untracked.InputTag("hltIter3IterL3FromL1MuonMerged"),
+                   theTrackIOL1Iter0        = cms.untracked.InputTag("hltIter0IterL3FromL1MuonTrackSelectionHighPurity"),
+                   theTrackIOL1Iter1        = cms.untracked.InputTag("hltIter2IterL3FromL1MuonTrackSelectionHighPurity"),
+                   theTrackIOL1Iter2        = cms.untracked.InputTag("hltIter3IterL3FromL1MuonTrackSelectionHighPurity"),
+                   theTrackIOL2Iter0        = cms.untracked.InputTag("hltIter0IterL3MuonTrackSelectionHighPurity"),
+                   theTrackIOL2Iter1        = cms.untracked.InputTag("hltIter2IterL3MuonTrackSelectionHighPurity"),
+                   theTrackIOL2Iter2        = cms.untracked.InputTag("hltIter3IterL3MuonTrackSelectionHighPurity"),
+
                    l3filterLabel    = cms.string("hltL3fL1sMu22Or25L1f0L2f10QL3Filtered27Q"),
                    lumiScalerTag            = cms.untracked.InputTag("scalersRawToDigi"),
                    puInfoTag                = cms.untracked.InputTag("addPileupInfo"),
                    genParticlesTag          = cms.untracked.InputTag("genParticles"),
-                   doOffline                = cms.untracked.bool(True)
+                   doOffline                = cms.untracked.bool(True),
+			        preselection = cms.string("gmtMuonCand.quality > 1"), # FIXME: maybe exclude CSC-only region?
+			        useTrack  = cms.string("tracker"),
+			        useState  = cms.string("atVertex"),
+			        maxDeltaR   = cms.double(1.5),             ## FIXME: to be tuned
+			        maxDeltaEta = cms.double(0.3),             ## FIXME: to be tuned
+			        l1PhiOffset = cms.double(1.25 * pi/180.),  
+			        useSimpleGeometry = cms.bool(True),
+			        fallbackToME1     = cms.bool(True),
+
 )
 
+#process.load("MuonAnalysis.MuonAssociators.muonL1MatchExtended_cfi")
+#process.load("MuonAnalysis.MuonAssociators.muonL1Match_cfi")
+#process.muonL1Match.muons = "muons"
 
+#import PhysicsTools.PatAlgos.producersLayer1.muonProducer_cfi
+#process.patMuons = PhysicsTools.PatAlgos.producersLayer1.muonProducer_cfi.patMuons.clone(
+#    muonSource = 'muons',
+#    embedTrack          = True,
+#    embedCombinedMuon   = True,
+#    embedStandAloneMuon = True,
+#    embedPickyMuon = False,
+#    embedTpfmsMuon = False, 
+#    userIsolation = cms.PSet(), # no extra isolation
+#    isoDeposits = cms.PSet(),   # no isodeposits
+#    addGenMatch = False,        # no mc
+#)
+
+#from MuonAnalysis.MuonAssociators.muonL1MatchExtended_cfi import addUserData as addMuonL1MatchExtended
+#addMuonL1MatchExtended(process.patMuons, addExtraInfo=True)
 
 process.TFileService = cms.Service("TFileService",
                                fileName = cms.string("muonNtuple.root"),
                                closeFileFast = cms.untracked.bool(False)
 )
 process.HLTValidation = cms.EndPath(
+#    process.muonL1Match +
+#    process.patMuons +
     process.muonNtuples
 )
 

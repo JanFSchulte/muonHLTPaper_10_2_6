@@ -48,6 +48,9 @@
 #include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2D.h"
 #include "DataFormats/TrackerRecHit2D/interface/SiPixelRecHit.h"
 #include "DataFormats/TrackerRecHit2D/interface/OmniClusterRef.h"
+#include "MuonAnalysis/MuonAssociators/interface/PropagateToMuon.h"
+
+
 class MuonServiceProxy;
 
 enum HLTCollectionType { 
@@ -65,6 +68,12 @@ enum TrackCollectionType {
   ihltTrackOI=0,
   ihltTrackIOL1,
   ihltTrackIOL2,
+  ihltTrackIOL1Iter0,
+  ihltTrackIOL1Iter1,
+  ihltTrackIOL1Iter2,
+  ihltTrackIOL2Iter0,
+  ihltTrackIOL2Iter1,
+  ihltTrackIOL2Iter2,
 };
 //**************************//
 
@@ -144,6 +153,20 @@ class MuonNtuples : public edm::EDAnalyzer {
   edm::EDGetTokenT<reco::TrackCollection> theTrackIOL2Token_;
   edm::InputTag theTrackIOL1Tag_;
   edm::EDGetTokenT<reco::TrackCollection> theTrackIOL1Token_;
+  edm::InputTag theTrackIOL1Iter0Tag_;
+  edm::EDGetTokenT<reco::TrackCollection> theTrackIOL1Iter0Token_;
+  edm::InputTag theTrackIOL1Iter1Tag_;
+  edm::EDGetTokenT<reco::TrackCollection> theTrackIOL1Iter1Token_;
+  edm::InputTag theTrackIOL1Iter2Tag_;
+  edm::EDGetTokenT<reco::TrackCollection> theTrackIOL1Iter2Token_;
+  edm::InputTag theTrackIOL2Iter0Tag_;
+  edm::EDGetTokenT<reco::TrackCollection> theTrackIOL2Iter0Token_;
+  edm::InputTag theTrackIOL2Iter1Tag_;
+  edm::EDGetTokenT<reco::TrackCollection> theTrackIOL2Iter1Token_;
+  edm::InputTag theTrackIOL2Iter2Tag_;
+  edm::EDGetTokenT<reco::TrackCollection> theTrackIOL2Iter2Token_;
+
+
 //******************************************************************//
 
 
@@ -208,6 +231,8 @@ class MuonNtuples : public edm::EDAnalyzer {
   unsigned int nGoodVtx; 
   MuonServiceProxy *theService;
 
+  PropagateToMuon propagatorToMuon;
+
 };
 
 /// default constructor
@@ -224,6 +249,22 @@ MuonNtuples::MuonNtuples(const edm::ParameterSet& cfg):
     theTrackIOL2Token_        (consumes<reco::TrackCollection>(theTrackIOL2Tag_)),
   theTrackIOL1Tag_          (cfg.getUntrackedParameter<edm::InputTag>("theTrackIOL1")),
     theTrackIOL1Token_        (consumes<reco::TrackCollection>(theTrackIOL1Tag_)),
+  theTrackIOL1Iter0Tag_          (cfg.getUntrackedParameter<edm::InputTag>("theTrackIOL1Iter0")),
+    theTrackIOL1Iter0Token_        (consumes<reco::TrackCollection>(theTrackIOL1Iter0Tag_)),
+  theTrackIOL1Iter1Tag_          (cfg.getUntrackedParameter<edm::InputTag>("theTrackIOL1Iter1")),
+    theTrackIOL1Iter1Token_        (consumes<reco::TrackCollection>(theTrackIOL1Iter1Tag_)),
+  theTrackIOL1Iter2Tag_          (cfg.getUntrackedParameter<edm::InputTag>("theTrackIOL1Iter2")),
+    theTrackIOL1Iter2Token_        (consumes<reco::TrackCollection>(theTrackIOL1Iter2Tag_)),
+  theTrackIOL2Iter0Tag_          (cfg.getUntrackedParameter<edm::InputTag>("theTrackIOL2Iter0")),
+    theTrackIOL2Iter0Token_        (consumes<reco::TrackCollection>(theTrackIOL2Iter0Tag_)),
+  theTrackIOL2Iter1Tag_          (cfg.getUntrackedParameter<edm::InputTag>("theTrackIOL2Iter1")),
+    theTrackIOL2Iter1Token_        (consumes<reco::TrackCollection>(theTrackIOL2Iter1Tag_)),
+  theTrackIOL2Iter2Tag_          (cfg.getUntrackedParameter<edm::InputTag>("theTrackIOL2Iter2")),
+    theTrackIOL2Iter2Token_        (consumes<reco::TrackCollection>(theTrackIOL2Iter2Tag_)),
+
+
+
+
 //************************************************************************************************//
 
 
@@ -267,7 +308,8 @@ MuonNtuples::MuonNtuples(const edm::ParameterSet& cfg):
   genTag_                 (cfg.getUntrackedParameter<edm::InputTag>("genParticlesTag")),
     genToken_               (consumes<reco::GenParticleCollection>(genTag_)), 
 
-  doOffline_                 (cfg.getUntrackedParameter<bool>("doOffline"))
+  doOffline_                 (cfg.getUntrackedParameter<bool>("doOffline")),
+  propagatorToMuon           (cfg)
 {
 
   theService = new MuonServiceProxy(cfg.getParameter<edm::ParameterSet>("ServiceParameters"));
@@ -293,8 +335,7 @@ void MuonNtuples::endRun  (const edm::Run & run, const edm::EventSetup & eventSe
 void MuonNtuples::analyze (const edm::Event &event, const edm::EventSetup &eventSetup) {
 
   theService->update(eventSetup);
-
-
+  propagatorToMuon.init(eventSetup);
   beginEvent();
 
   // Fill general info
@@ -375,6 +416,35 @@ void MuonNtuples::analyze (const edm::Event &event, const edm::EventSetup &event
   if (event.getByToken(theTrackIOL1Token_, trackIOL1))
     fillHltTrack(trackIOL1, event, TrackCollectionType::ihltTrackIOL1);
   
+   //Track Outside In from L1 Iter0
+  edm::Handle<reco::TrackCollection> trackIOL1Iter0;
+  if (event.getByToken(theTrackIOL1Iter0Token_, trackIOL1Iter0))
+    fillHltTrack(trackIOL1Iter0, event, TrackCollectionType::ihltTrackIOL1Iter0);
+
+    //Track Outside In from L1 Iter1
+  edm::Handle<reco::TrackCollection> trackIOL1Iter1;
+  if (event.getByToken(theTrackIOL1Iter1Token_, trackIOL1Iter1))
+    fillHltTrack(trackIOL1Iter1, event, TrackCollectionType::ihltTrackIOL1Iter1);
+
+    //Track Outside In from L1 Iter2
+  edm::Handle<reco::TrackCollection> trackIOL1Iter2;
+  if (event.getByToken(theTrackIOL1Iter2Token_, trackIOL1Iter2))
+    fillHltTrack(trackIOL1Iter2, event, TrackCollectionType::ihltTrackIOL1Iter2);
+
+    //Track Outside In from L2 Iter0
+  edm::Handle<reco::TrackCollection> trackIOL2Iter0;
+  if (event.getByToken(theTrackIOL2Iter0Token_, trackIOL2Iter0))
+    fillHltTrack(trackIOL2Iter0, event, TrackCollectionType::ihltTrackIOL2Iter0);
+
+    //Track Outside In from L2 Iter1
+  edm::Handle<reco::TrackCollection> trackIOL2Iter1;
+  if (event.getByToken(theTrackIOL2Iter1Token_, trackIOL2Iter1))
+    fillHltTrack(trackIOL2Iter1, event, TrackCollectionType::ihltTrackIOL2Iter1);
+
+    //Track Outside In from L2 Iter2
+  edm::Handle<reco::TrackCollection> trackIOL2Iter2;
+  if (event.getByToken(theTrackIOL2Iter2Token_, trackIOL2Iter2))
+    fillHltTrack(trackIOL2Iter2, event, TrackCollectionType::ihltTrackIOL2Iter2);
   
   // Fill trigger information for probe muon
   edm::Handle<edm::TriggerResults>   triggerResults;
@@ -495,11 +565,11 @@ void MuonNtuples::analyze (const edm::Event &event, const edm::EventSetup &event
 
 
 
-  try{
+//  try{
      //std::cout<<"total muons in the event: "<<muons->size()<<std::endl;
      fillMuons(muons,L3MuonTrigObjects,l3cands,links, pv, event);
-     }
-   catch(...){}
+//     }
+//   catch(...){ cout << "caught" << std::endl;}
 
 
 
@@ -655,7 +725,13 @@ void MuonNtuples::fillHltTrack(const edm::Handle<reco::TrackCollection>  & track
   
     if (type == TrackCollectionType::ihltTrackOI)   {event_.hltTrackOI.push_back(MuTrack)  ;  continue; }
     if (type == TrackCollectionType::ihltTrackIOL1) {event_.hltTrackIOL1.push_back(MuTrack);  continue; }
+    if (type == TrackCollectionType::ihltTrackIOL1Iter0) {event_.hltTrackIOL1Iter0.push_back(MuTrack);  continue; }
+    if (type == TrackCollectionType::ihltTrackIOL1Iter1) {event_.hltTrackIOL1Iter1.push_back(MuTrack);  continue; }
+    if (type == TrackCollectionType::ihltTrackIOL1Iter2) {event_.hltTrackIOL1Iter2.push_back(MuTrack);  continue; }
     if (type == TrackCollectionType::ihltTrackIOL2) {event_.hltTrackIOL2.push_back(MuTrack);  continue; }
+    if (type == TrackCollectionType::ihltTrackIOL2Iter0) {event_.hltTrackIOL2Iter0.push_back(MuTrack);  continue; }
+    if (type == TrackCollectionType::ihltTrackIOL2Iter1) {event_.hltTrackIOL2Iter1.push_back(MuTrack);  continue; }
+    if (type == TrackCollectionType::ihltTrackIOL2Iter2) {event_.hltTrackIOL2Iter2.push_back(MuTrack);  continue; }
 
   }
 }
@@ -694,10 +770,15 @@ void MuonNtuples::fillMuons(const edm::Handle<reco::MuonCollection>       & muon
     muon::isLooseMuon ( (*mu1)     ) ? theMu.isLoose  = 1 : theMu.isLoose  = 0;
     muon::isMediumMuon( (*mu1)     ) ? theMu.isMedium = 1 : theMu.isMedium = 0;
 
- 
-
+   if (mu1 -> globalTrack().isNonnull()){ 
+   	TrajectoryStateOnSurface prop = propagatorToMuon.extrapolate(*mu1 -> globalTrack());
+   	if (prop.isValid()) {
+	        theMu.propagatedEta = prop.globalPosition().eta();
+	        theMu.propagatedPhi = prop.globalPosition().phi();
+      		//std::cout << "Propagation suceeded, eta = " << prop.globalPosition().eta() << ", phi = " << prop.globalPosition().phi() << std::endl;
+   	}
+    }
     //New variables in the Ntuple 
-
     if (mu1 -> globalTrack().isNonnull()){
       theMu.chi2 = mu1 -> globalTrack() -> normalizedChi2(); //normalized global-track chi2
       theMu.validHits      = mu1 -> globalTrack() -> hitPattern().numberOfValidHits(); //number of muon-chamber  hit included in the global muon track
@@ -880,6 +961,13 @@ void MuonNtuples::beginEvent()
   event_.hltTrackOI.clear();
   event_.hltTrackIOL1.clear();
   event_.hltTrackIOL2.clear();
+  event_.hltTrackIOL1Iter0.clear();
+  event_.hltTrackIOL1Iter1.clear();
+  event_.hltTrackIOL1Iter2.clear();
+  event_.hltTrackIOL2Iter0.clear();
+  event_.hltTrackIOL2Iter1.clear();
+  event_.hltTrackIOL2Iter2.clear();
+
 //**********************************************//
   event_.muons.clear();
   event_.hltmuons.clear();
